@@ -102,7 +102,6 @@ struct thread
     struct list_elem elem;              /* List element. */
     struct list_elem sleepelem;
     struct list_elem childelem;
-
     struct hash page_table; /* Every process gets its own supplementary table. */
 #ifdef USERPROG
     /* Owned by userprog/process.c. */
