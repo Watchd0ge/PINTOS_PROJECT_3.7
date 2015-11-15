@@ -22,7 +22,7 @@ void init_frame_table(size_t frame_cnt)
 /* Gets a physical frame if available and maps it to a page
    obtained from the user pool
 */
-void *find_frame(int flags)
+void *get_frame(int flags)
 {
   //Check bitmap to see if free frame available
   struct thread *t = thread_current();
