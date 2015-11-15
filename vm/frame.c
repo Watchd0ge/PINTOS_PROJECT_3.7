@@ -4,7 +4,7 @@
 #include "threads/thread.h"
 
 /* Implement Frame table allocator/frame eviction here
-   Should happen only once. Inits frame table containing 
+   Should happen only once. Inits frame table containing
    frame_cnt entries. Each entry in the table is a frame_entry
    that contains a pointer to a frame and its associated data
 */
@@ -14,37 +14,37 @@ void init_frame_table(size_t frame_cnt)
   //Perform hash table init, struct inits here
   fr_table = malloc (sizeof(struct frame_table));
   lock_init(&fr_table->lock);
-  hash_init(&fr_table->ft, frame_hash, frame_less, NULL);  
+  hash_init(&fr_table->ft, frame_hash, frame_less, NULL);
   //bitmap_init(fr_table->bm_frames, frame_cnt);
   fr_table->bm_frames = bitmap_create(frame_cnt);
 }
 
-/* Gets a physical frame if available and maps it to a page 
+/* Gets a physical frame if available and maps it to a page
    obtained from the user pool
 */
-void *get_frame(int flags) 
+void *get_frame(int flags)
 {
   //Check bitmap to see if free frame available
   struct thread *t = thread_current();
   size_t idx = bitmap_scan_and_flip (fr_table->bm_frames, 0, 1, false);
   void * free_frame;
   //If available, fetch a page from user pool by calling palloc_get_page
-  if(idx != BITMAP_ERROR) 
+  if(idx != BITMAP_ERROR)
     {
        free_frame = palloc_get_page(flags);
-       if(!free_frame) 
+       if(!free_frame)
 	 {
-	   /* Evict frame - shouldn't happen here since we scan 
+	   /* Evict frame - shouldn't happen here since we scan
 		   the bitmap first*/
          }
     }
-  else 
+  else
     {
      //if fetch failed, PANIC for now. Implement evict later.
        PANIC("out of frames!");
     }
   //else, set the appropriate bit in the ft bitmap (already done)
-  //malloc free frame. map page to frame. Insert frame to hash table. 
+  //malloc free frame. map page to frame. Insert frame to hash table.
   struct frame_entry *frame = malloc(sizeof(struct frame_entry));
   if(!frame)
     {
@@ -61,10 +61,10 @@ void *get_frame(int flags)
 
 /*  Finds frame corresponding to addr. Frees the corresponding
     frame, updates the frame bitmap*/
-void release_frame(void *addr)
-{
-  
-}
+// void release_frame(void *addr)
+// {
+//
+// }
 
 unsigned frame_hash (const struct hash_elem *p_, void *aux UNUSED)
 {
@@ -81,8 +81,6 @@ bool frame_less (const struct hash_elem *a_, const struct hash_elem *b_, void *a
 
 void bitmap_init(struct bitmap *bm, size_t frame_cnt)
 {
-   bm = bitmap_create (frame_cnt); 
+   bm = bitmap_create (frame_cnt);
 //   bitmap_set(bm, frame_cnt, FALSE);
 }
-
-
