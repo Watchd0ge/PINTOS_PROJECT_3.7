@@ -22,7 +22,7 @@ void init_frame_table(size_t frame_cnt)
 /* Gets a physical frame if available and maps it to a page
    obtained from the user pool
 */
-void *get_frame(int flags)
+void *find_frame(int flags)
 {
   //Check bitmap to see if free frame available
   struct thread *t = thread_current();
@@ -31,12 +31,12 @@ void *get_frame(int flags)
   //If available, fetch a page from user pool by calling palloc_get_page
   if(idx != BITMAP_ERROR)
     {
-       free_frame = palloc_get_page(flags);
-       if(!free_frame)
-	 {
-	   /* Evict frame - shouldn't happen here since we scan
-		   the bitmap first*/
-         }
+      free_frame = palloc_get_page(flags);
+      if(!free_frame)
+        {
+          /* Evict frame - shouldn't happen here since we scan
+		        the bitmap first*/
+        }
     }
   else
     {
@@ -46,10 +46,7 @@ void *get_frame(int flags)
   //else, set the appropriate bit in the ft bitmap (already done)
   //malloc free frame. map page to frame. Insert frame to hash table.
   struct frame_entry *frame = malloc(sizeof(struct frame_entry));
-  if(!frame)
-    {
-       PANIC("Malloc failed:Out of memory!");
-    }
+  if(!frame) { PANIC("Malloc failed:Out of memory!");}
   frame->frame = free_frame;
   frame->pagedir = t->pagedir;
   hash_insert (&fr_table->ft, &frame->hash_elem);
