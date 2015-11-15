@@ -99,8 +99,10 @@ struct thread
 
     /* Shared between thread.c and synch.c. */
     struct list_elem elem;              /* List element. */
-    struct list_elem sleepelem; 
+    struct list_elem sleepelem;
     struct list_elem childelem;
+
+    struct hash page_table /* Every process gets its own supplementary table. */
 #ifdef USERPROG
     /* Owned by userprog/process.c. */
     uint32_t *pagedir;                  /* Page directory. */
@@ -125,7 +127,7 @@ struct thread
 
     char process_name[16];
     struct file *fd_list[FD_MAX];
-    int fd_num; 
+    int fd_num;
     struct file *open_file;
   };
 
