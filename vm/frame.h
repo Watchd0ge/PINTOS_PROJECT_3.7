@@ -35,7 +35,7 @@
 /* A frame structure corresponds to exactly one frame,
    tracking the frame whether it on memeory, disk, or swap.
    Unit structure making up frame table */
-struct frame_struct
+struct frame
 {
   // which Thread
   // which physical Address

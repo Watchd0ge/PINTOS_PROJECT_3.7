@@ -134,7 +134,7 @@ main (void)
   int i = 0;
   struct frame_struct *fs;
   while (i < 383) {
-    fs = malloc (sizeof (struct frame_struct));
+    fs = malloc (sizeof (struct frame));
     fs->phys_addr = palloc_get_page (PAL_USER | PAL_ZERO);
     fs->v_addr = NULL;
     fs->owner = NULL;
