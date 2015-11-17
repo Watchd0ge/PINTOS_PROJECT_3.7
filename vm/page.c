@@ -13,6 +13,9 @@
    reference
 */
 
+struct page *
+sup_pt_add (uint32_t *pd, void *upage, uint8_t *vaddr, size_t length, block_sector_t sector_no);
+
 /* Takes a frame and maps it to a page.
    Returns the newly created page */
 // struct page * create_page(void *addr, int flags)
@@ -137,7 +140,7 @@ sup_pt_add (uint32_t *pd, void *upage, uint8_t *vaddr, size_t length, block_sect
 {
 
   /* Allocate page_struct, i.e., a new entry in sup_pt */
-  struct page *pg = create_page (upage)
+  struct page *pg = create_page (upage);
   if (pg == NULL)
     return NULL;
 
