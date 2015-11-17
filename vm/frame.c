@@ -38,7 +38,12 @@ init_frametable (void)
   //evict_pointer = NULL;
 }
 
-// void 
+void
+store_frame (struct frame *f) {
+  list_push_back (&frame_list, f->elem);
+}
+
+// void
 // allocate_frame (void *phys_addr, void *v_addr, struct *thread t) {
 //   /* code */
 // }
