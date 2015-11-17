@@ -114,7 +114,7 @@ struct page * page_lookup (void *address)
   struct page p;
   struct hash_elem *e;
   p.addr = (void *)((uint32_t)address & (~PGMASK));
-  e = hash_find (t->spt->pages, &p.hash_elem);
+  e = hash_find (t->spt.pages, &p.hash_elem);
   return e != NULL ? hash_entry (e, struct page, hash_elem) : NULL;
 }
 
