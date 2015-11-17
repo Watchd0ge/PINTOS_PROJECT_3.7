@@ -96,8 +96,8 @@ palloc_get_multiple (enum palloc_flags flags, size_t page_cnt)
   else
     {
       if (flags & PAL_ASSERT)
-        return NULL;
-        // PANIC ("palloc_get: out of pages");
+        // return NULL;
+        PANIC ("palloc_get: out of pages");
     }
 
   return pages;
