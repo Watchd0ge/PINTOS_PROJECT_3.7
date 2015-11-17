@@ -450,6 +450,51 @@ validate_segment (const struct Elf32_Phdr *phdr, struct file *file)
 
    Return true if successful, false if a memory allocation error
    or disk read error occurs. */
+// static bool
+// load_segment (struct file *file, off_t ofs, uint8_t *upage,
+//               uint32_t read_bytes, uint32_t zero_bytes, bool writable)
+// {
+//   ASSERT ((read_bytes + zero_bytes) % PGSIZE == 0);
+//   ASSERT (pg_ofs (upage) == 0);
+//   ASSERT (ofs % PGSIZE == 0);
+//
+//   file_seek (file, ofs);
+//   while (read_bytes > 0 || zero_bytes > 0)
+//     {
+//       /* Calculate how to fill this page.
+//          We will read PAGE_READ_BYTES bytes from FILE
+//          and zero the final PAGE_ZERO_BYTES bytes. */
+//       size_t page_read_bytes = read_bytes < PGSIZE ? read_bytes : PGSIZE;
+//       size_t page_zero_bytes = PGSIZE - page_read_bytes;
+//
+//       /* Get a page of memory. */
+//       uint8_t *kpage = palloc_get_page (PAL_USER);
+//       if (kpage == NULL)
+//         return false;
+//
+//       /* Load this page. */
+//       if (file_read (file, kpage, page_read_bytes) != (int) page_read_bytes)
+//         {
+//           palloc_free_page (kpage);
+//           return false;
+//         }
+//       memset (kpage + page_read_bytes, 0, page_zero_bytes);
+//
+//       /* Add the page to the process's address space. */
+//       if (!install_page (upage, kpage, writable))
+//         {
+//           palloc_free_page (kpage);
+//           return false;
+//         }
+//
+//       /* Advance. */
+//       read_bytes -= page_read_bytes;
+//       zero_bytes -= page_zero_bytes;
+//       upage += PGSIZE;
+//     }
+//   return true;
+// }
+
 static bool
 load_segment (struct file *file, off_t ofs, uint8_t *upage,
               uint32_t read_bytes, uint32_t zero_bytes, bool writable)
@@ -467,29 +512,37 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
       size_t page_read_bytes = read_bytes < PGSIZE ? read_bytes : PGSIZE;
       size_t page_zero_bytes = PGSIZE - page_read_bytes;
 
-      /* Get a page of memory. */
-      uint8_t *kpage = palloc_get_page (PAL_USER);
-      if (kpage == NULL)
-        return false;
+      /* Lazy loading, instead of allocating frame right away,
+         just mark the page as if the page is swapped out */
+      uint32_t flag = POS_DISK | TYPE_Executable;
+      if (page_read_bytes == 0)
+          flag |= FS_ZERO;
 
-      /* Load this page. */
-      if (file_read (file, kpage, page_read_bytes) != (int) page_read_bytes)
-        {
-          palloc_free_page (kpage);
-          return false;
-        }
-      memset (kpage + page_read_bytes, 0, page_zero_bytes);
+      if (!writable)
+          flag |= FS_READONLY;
 
-      /* Add the page to the process's address space. */
-      if (!install_page (upage, kpage, writable))
+      block_sector_t sector_idx =
+        byte_to_sector (file_get_inode (file), ofs);
+
+     /* For sharing: traverse frame table, find an executable frame
+         containing this sector block data */
+      struct frame_struct* fs_prev = frame_lookup_exec (sector_idx, flag);
+      if (fs_prev != NULL)	/* Found the same exec page */
         {
-          palloc_free_page (kpage);
-          return false;
+          if (!mark_shared_page (upage, fs_prev))
+            return false;
         }
+      else			/* Not found, mark a new page */
+        {
+          if (!mark_page (upage, NULL, page_read_bytes, flag, sector_idx))
+            return false;
+        }
+
 
       /* Advance. */
       read_bytes -= page_read_bytes;
       zero_bytes -= page_zero_bytes;
+      ofs += page_read_bytes;
       upage += PGSIZE;
     }
   return true;
@@ -497,6 +550,29 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
 
 /* Create a minimal stack by mapping a zeroed page at the top of
    user virtual memory. */
+// static bool
+// setup_stack (void **esp)
+// {
+//   uint8_t *kpage;
+//   bool success = false;
+//
+//   kpage = palloc_get_page (PAL_USER | PAL_ZERO);
+//   if (!kpage)
+//     {
+//       return success;
+//     }
+//   success = install_page (((uint8_t *) PHYS_BASE) - PGSIZE, kpage, true);
+//   if (success)
+//     {
+//       *esp = PHYS_BASE;
+//     }
+//   else
+//     {
+//       palloc_free_page (kpage);
+//       return success;
+//     }
+//   return success;
+// }
 static bool
 setup_stack (void **esp)
 {
@@ -504,19 +580,25 @@ setup_stack (void **esp)
   bool success = false;
 
   kpage = palloc_get_page (PAL_USER | PAL_ZERO);
-  if (!kpage)
+  if (kpage != NULL)
     {
-      return success;
-    }
-  success = install_page (((uint8_t *) PHYS_BASE) - PGSIZE, kpage, true);
-  if (success)
-    {
-      *esp = PHYS_BASE;
-    }
-  else
-    {
-      palloc_free_page (kpage);
-      return success;
+      void* addr = (void*)PHYS_BASE - PGSIZE;
+
+      uint32_t* pd = thread_current ()->pagedir;
+      uint32_t flag = POS_MEM | TYPE_Stack;
+      mark_page (addr, kpage, PGSIZE, flag, SECTOR_ERROR);
+      success = install_page (addr, kpage, true);
+      if (success)
+      {
+        *esp = PHYS_BASE;
+        struct thread *t = thread_current ();
+        t->stack_bound = addr;
+      }
+      else
+      {
+        sup_pt_find_and_delete (pd, addr);
+        palloc_free_page (kpage);
+      }
     }
   return success;
 }
