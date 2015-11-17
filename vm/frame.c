@@ -137,7 +137,7 @@ sup_pt_add (uint32_t *pd, void *upage, uint8_t *vaddr, size_t length,
   //   return NULL;
   // }
   // pshr->pte = pte;
-  list_push_back (&ps->fs->pte_list, &pshr->elem);
+  // list_push_back (&ps->fs->pte_list, &pshr->elem);
   lock_release (&ps->fs->frame_lock);
 
   /* Register at supplemental page table */
