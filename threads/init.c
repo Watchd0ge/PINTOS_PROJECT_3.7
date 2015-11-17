@@ -138,7 +138,7 @@ main (void)
     fs->phys_addr = palloc_get_page (PAL_USER | PAL_ZERO);
     fs->v_addr = NULL;
     fs->owner = NULL;
-    store_frame (*fs);
+    store_frame (fs);
     // printf ("fs->vaddr = %p\n", fs->phys_addr);
     i++;
     printf ("FRAMES AVAIALBLE %d\n", i);
