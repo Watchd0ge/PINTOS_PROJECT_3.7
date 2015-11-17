@@ -135,7 +135,7 @@ main (void)
   struct frame_struct *fs;
   while (i < init_ram_pages) {
     fs = malloc (sizeof (struct frame_struct));
-    //fs->vaddr = palloc_get_page (PAL_USER | PAL_ZERO);
+    &fs.vaddr = palloc_get_page (PAL_USER | PAL_ZERO);
     i++;
   }
   printf ("WE HAVE %d MANY PAGES\n", i);
