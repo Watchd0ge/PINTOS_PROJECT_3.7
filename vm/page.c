@@ -35,53 +35,53 @@ void insert_page (struct page * upage)
   hash_insert (t->spt.pages, &upage->hash_elem);
 }
 
-void map_frame_to_page(void *addr, void *frame)
-{
-  struct page * upage = page_lookup ((void *)((uint32_t)addr & (~PGMASK)));
-  upage -> kaddr = frame;
-}
+// void map_frame_to_page(void *addr, void *frame)
+// {
+//   struct page * upage = page_lookup ((void *)((uint32_t)addr & (~PGMASK)));
+//   upage -> kaddr = frame;
+// }
 
 /* Used only when file read bytes == PGSIZE */
-struct page * create_unmapped_page(void *addr, uint8_t flags)
-{
-   struct thread *t = thread_current();
-   struct page * upage = malloc(sizeof(struct page));
-   upage -> addr = (void *)((uint32_t)addr & (~PGMASK));
-   upage -> flags = flags;
-   hash_insert (&t->spt, &upage->hash_elem);
-   return upage;
-}
+// struct page * create_unmapped_page(void *addr, uint8_t flags)
+// {
+//    struct thread *t = thread_current();
+//    struct page * upage = malloc(sizeof(struct page));
+//    upage -> addr = (void *)((uint32_t)addr & (~PGMASK));
+//    upage -> flags = flags;
+//    hash_insert (&t->spt, &upage->hash_elem);
+//    return upage;
+// }
 
-struct page * map_page_to_frame (void *addr, int flags)
-{
-  struct thread *t = thread_current();
-  /*Create a new page*/
-  if (flags == NEW_PAGE)
-    {
-      struct page * upage = malloc (sizeof(struct page));
-      upage -> addr = (void *)((uint32_t)addr & (~PGMASK));
-      upage -> dirty = 0;
-      upage -> accessed = 0;
-      upage -> flags = NEW_PAGE;
-      /*Insert page into supplemental page table*/
-      hash_insert (&t->spt, &upage->hash_elem);
-      /*Create a frame */
-      void *kpage = get_frame(flags);
-      if (kpage)
-	{
-	  pagedir_set_page (t->pagedir, upage->addr, kpage, true);
-      	}
-      else
-	{
-	  /*Shouldn't happen as frame eviction is taken care of in get_frame*/
-	}
-      return upage;
-    }
-  else
-    {
-      return 0;
-    }
-}
+// struct page * map_page_to_frame (void *addr, int flags)
+// {
+//   struct thread *t = thread_current();
+//   /*Create a new page*/
+//   if (flags == NEW_PAGE)
+//     {
+//       struct page * upage = malloc (sizeof(struct page));
+//       upage -> addr = (void *)((uint32_t)addr & (~PGMASK));
+//       upage -> dirty = 0;
+//       upage -> accessed = 0;
+//       upage -> flags = NEW_PAGE;
+//       /*Insert page into supplemental page table*/
+//       hash_insert (&t->spt, &upage->hash_elem);
+//       /*Create a frame */
+//       void *kpage = get_frame(flags);
+//       if (kpage)
+// 	{
+// 	  pagedir_set_page (t->pagedir, upage->addr, kpage, true);
+//       	}
+//       else
+// 	{
+// 	  /*Shouldn't happen as frame eviction is taken care of in get_frame*/
+// 	}
+//       return upage;
+//     }
+//   else
+//     {
+//       return 0;
+//     }
+// }
 
 void set_page_accessed(struct page *page)
 {
@@ -114,7 +114,7 @@ struct page * page_lookup (void *address)
   struct page p;
   struct hash_elem *e;
   p.addr = (void *)((uint32_t)address & (~PGMASK));
-  e = hash_find (&t->spt, &p.hash_elem);
+  e = hash_find (t->spt->pages, &p.hash_elem);
   return e != NULL ? hash_entry (e, struct page, hash_elem) : NULL;
 }
 
