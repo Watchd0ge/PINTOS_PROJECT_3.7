@@ -134,8 +134,9 @@ main (void)
   int i = 0;
   struct frame_struct *fs;
   while (i < init_ram_pages) {
-    fs = malloc (sizeof (struct frame_struct));
-    fs->vaddr = palloc_get_page (PAL_USER | PAL_ZERO | PAL_ASSERT);
+    // fs = malloc (sizeof (struct frame_struct));
+    // fs->vaddr = palloc_get_page (PAL_USER | PAL_ZERO | PAL_ASSERT);
+    palloc_get_page (PAL_USER | PAL_ZERO | PAL_ASSERT);
     // printf ("fs->vaddr = %p\n", fs->vaddr);
     i++;
     printf ("FRAMES AVAIALBLE %d\n", i);
