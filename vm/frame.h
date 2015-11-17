@@ -37,13 +37,12 @@
    Unit structure making up frame table */
 struct frame_struct
 {
-  uint32_t flag;                /* Flag bits */
-  uint8_t *vaddr;               /* Virtual address if on memory */
-  size_t length;                /* Length of meaningful contents */
-  block_sector_t sector_no;     /* Sector # if on disk or swap */
-  struct lock frame_lock;       /* Lock for protecting data in frame */
-  struct list pte_list;         /* A list of pte's representing
-                                   user pages sharing this frame */
+  // which Thread
+  // which physical Address
+  // which user address
+  void *phys_addr;              /* Which physical address this frame refers to */
+  void *v_addr;                 /* Which virtual address this maps to */
+  struct thread *owner;         /* Thread which owns this page */
   struct list_elem elem;
 };
 
@@ -58,6 +57,6 @@ struct page_struct
   struct hash_elem elem;
 };
 
-void sup_pt_init (void);
+void init_frametable (void);
 
 #endif /* vm/frame.h */

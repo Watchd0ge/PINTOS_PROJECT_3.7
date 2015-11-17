@@ -28,7 +28,7 @@ struct frame_struct* evict_pointer;
 
 /* Initialize supplemental page table and frame table */
 void
-sup_pt_init (void)
+init_frametable (void)
 {
   //hash_init (&sup_pt, sup_pt_hash_func, sup_pt_less_func, NULL);
   list_init (&frame_list);
