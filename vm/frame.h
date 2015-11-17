@@ -57,3 +57,5 @@ struct page_struct
   struct frame_struct *fs;
   struct hash_elem elem;
 };
+
+void sup_pt_init (void);
