@@ -40,7 +40,7 @@ init_frametable (void)
 
 void
 store_frame (struct frame *f) {
-  list_push_back (&frame_list, f->elem);
+  list_push_back (&frame_list, &f->elem);
 }
 
 // void
