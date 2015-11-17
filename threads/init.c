@@ -132,7 +132,7 @@ main (void)
   printf ("INIT START ##########################\n");
   sup_pt_init ();
   int i = 0;
-  struct frame_struct fs;
+  struct frame_struct *fs;
   while (i < init_ram_pages) {
     fs = malloc (sizeof (struct frame_struct));
     fs->vaddr = palloc_get_page (PAL_USER | PAL_ZERO);
