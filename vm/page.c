@@ -4,6 +4,7 @@
 #include "threads/malloc.h"
 #include "userprog/pagedir.h"
 #include "threads/vaddr.h"
+#include "devices/block.h"
 #include <stdbool.h>
 
 /* Implements supplemental page table
