@@ -35,7 +35,7 @@ struct page
    uint8_t dirty;
    /* Set when page has been read/written after creation */
    uint8_t accessed;
-   uint8_t flags;
+  //  uint8_t flags;
    /* Thread owner */
    struct thread * owner;
    /* pointer to a file (if any) the page will access*/

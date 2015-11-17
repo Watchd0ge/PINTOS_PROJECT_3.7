@@ -18,6 +18,7 @@
 #include "threads/thread.h"
 #include "threads/vaddr.h"
 #include "vm/frame.h"
+#include "vm/page.h"
 
 static thread_func start_process NO_RETURN;
 static bool load (const char *cmdline, void (**eip) (void), void **esp);
@@ -363,9 +364,9 @@ load (const char *file_name, void (**eip) (void), void **esp)
                   read_bytes = 0;
                   zero_bytes = ROUND_UP (page_offset + phdr.p_memsz, PGSIZE);
                 }
-              // if (!load_segment (file, file_page, (void *) mem_page,
-              //                    read_bytes, zero_bytes, writable))
-              //   goto done;
+              if (!load_segment (file, file_page, (void *) mem_page,
+                                 read_bytes, zero_bytes, writable))
+                goto done;
             }
           else
             goto done;
@@ -474,23 +475,26 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
       if (kpage == NULL)
         return false;
 
+      block_sector_t sector_idx = byte_to_sector (file_get_inode (file), ofs);
+
       /* Load this page. */
-      if (file_read (file, kpage, page_read_bytes) != (int) page_read_bytes)
-        {
-          deallocate_frame (kpage);
-          return false;
-        }
-      memset (kpage + page_read_bytes, 0, page_zero_bytes);
+      mark_page (upage, NULL, page_read_bytes, sector_idx);
+
+      // if (file_read (file, kpage, page_read_bytes) != (int) page_read_bytes)
+      //   {
+      //     deallocate_frame (kpage);
+      //     return false;
+      //   }
+      // memset (kpage + page_read_bytes, 0, page_zero_bytes);
 
       /* Add the page to the process's address space. */
-      if (!install_page (upage, kpage, writable))
-        {
-          deallocate_frame (kpage);
-          // palloc_free_page (kpage);
-          return false;
-        }
+      // if (!install_page (upage, kpage, writable))
+      //   {
+      //     deallocate_frame (kpage);
+      //     // palloc_free_page (kpage);
+      //     return false;
+      //   }
 
-      // TODO: add to the sup_page_table
       /* Advance. */
       read_bytes -= page_read_bytes;
       zero_bytes -= page_zero_bytes;
