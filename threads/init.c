@@ -137,7 +137,7 @@ main (void)
     fs = malloc (sizeof (struct frame_struct));
     fs->phys_addr = palloc_get_page (PAL_USER | PAL_ZERO);
     fs->v_addr = NULL;
-    fs->t_owner = NULL;
+    fs->owner = NULL;
     store_frame (*fs);
     // printf ("fs->vaddr = %p\n", fs->phys_addr);
     i++;

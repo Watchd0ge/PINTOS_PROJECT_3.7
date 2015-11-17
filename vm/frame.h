@@ -59,4 +59,6 @@ struct page_struct
 
 void init_frametable (void);
 
+void store_frame (struct frame *);
+
 #endif /* vm/frame.h */
