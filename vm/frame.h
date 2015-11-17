@@ -59,3 +59,5 @@ struct page_struct
 };
 
 void sup_pt_init (void);
+
+#endif /* vm/frame.h */
