@@ -476,25 +476,25 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
       if (kpage == NULL)
         return false;
 
-      block_sector_t sector_idx = byte_to_sector (file_get_inode (file), ofs);
+      //block_sector_t sector_idx = byte_to_sector (file_get_inode (file), ofs);
 
       /* Load this page. */
-      mark_page (upage, NULL, page_read_bytes, sector_idx);
+      //mark_page (upage, NULL, page_read_bytes, sector_idx);
 
-      // if (file_read (file, kpage, page_read_bytes) != (int) page_read_bytes)
-      //   {
-      //     deallocate_frame (kpage);
-      //     return false;
-      //   }
-      // memset (kpage + page_read_bytes, 0, page_zero_bytes);
+      if (file_read (file, kpage, page_read_bytes) != (int) page_read_bytes)
+        {
+          deallocate_frame (kpage);
+          return false;
+        }
+      memset (kpage + page_read_bytes, 0, page_zero_bytes);
 
       /* Add the page to the process's address space. */
-      // if (!install_page (upage, kpage, writable))
-      //   {
-      //     deallocate_frame (kpage);
-      //     // palloc_free_page (kpage);
-      //     return false;
-      //   }
+      if (!install_page (upage, kpage, writable))
+        {
+          deallocate_frame (kpage);
+          // palloc_free_page (kpage);
+          return false;
+        }
 
       /* Advance. */
       read_bytes -= page_read_bytes;
