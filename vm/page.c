@@ -5,6 +5,7 @@
 #include "userprog/pagedir.h"
 #include "threads/vaddr.h"
 #include "devices/block.h"
+#include "filesys/inode.h"
 #include <stdbool.h>
 
 /* Implements supplemental page table

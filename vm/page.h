@@ -5,7 +5,9 @@
 #include "filesys/file.h"
 #include "filesys/filesys.h"
 #include "filesys/off_t.h"
+#include "filesys/inode.h"
 #include "devices/block.h"
+
 #define NEW_PAGE 1
 #define UNMAPPED_PAGE 2
 #define ZERO_PAGE 4
