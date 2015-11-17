@@ -111,8 +111,12 @@ struct thread
     unsigned magic;                     /* Detects stack overflow. */
     int64_t waketime;                   /* time to wake */
 
+    /* For stack growth */
+    void * user_esp;                    /* user esp */
+    void * stack_bound; 	              /* Stack bound */
+
     struct list lock_list;              /* list of lock held by it */
-    struct lock* locked_by;              /* it is locked by */
+    struct lock* locked_by;             /* it is locked by */
 
     int fixed_recent_cpu; //For project #1, advanced shceduling
     int nice;
