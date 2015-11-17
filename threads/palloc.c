@@ -86,7 +86,6 @@ palloc_get_multiple (enum palloc_flags flags, size_t page_cnt)
   else
      {
        pages = NULL;
-       printf ("PAGES ARE NULL ##### \n");
      }
 
   if (pages != NULL)

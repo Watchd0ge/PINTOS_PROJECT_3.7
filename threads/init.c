@@ -133,11 +133,12 @@ main (void)
   sup_pt_init ();
   int i = 0;
   struct frame_struct *fs;
-  while (i < init_ram_pages +2) {
+  while (i < init_ram_pages) {
     fs = malloc (sizeof (struct frame_struct));
-    fs->vaddr = palloc_get_page (PAL_USER | PAL_ZERO);
-    printf ("fs->vaddr = %p\n", fs->vaddr);
+    fs->vaddr = palloc_get_page (PAL_USER | PAL_ZERO | PAL_ASSERT);
+    // printf ("fs->vaddr = %p\n", fs->vaddr);
     i++;
+    printf ("FRAMES AVAIALBLE %d\n", i);
   }
   printf ("WE HAVE %d MANY PAGES\n", i);
   printf ("INIT FINISH #########################\n");
