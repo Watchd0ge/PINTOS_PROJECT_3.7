@@ -25,14 +25,14 @@ struct page * create_page(void *addr)
   upage -> kaddr = NULL;
   upage -> owner = thread_current ();
   // upage -> flags = flags;
-//  hash_insert (&t->sup_page_table, &kpage->hash_elem);
+//  hash_insert (&t->spt, &kpage->hash_elem);
   return upage;
 }
 
 void insert_page (struct page * upage)
 {
   struct thread *t = thread_current();
-  hash_insert (&t->sup_page_table, &upage->hash_elem);
+  hash_insert (&t->spt, &upage->hash_elem);
 }
 
 void map_frame_to_page(void *addr, void *frame)
@@ -48,7 +48,7 @@ struct page * create_unmapped_page(void *addr, uint8_t flags)
    struct page * upage = malloc(sizeof(struct page));
    upage -> addr = (void *)((uint32_t)addr & (~PGMASK));
    upage -> flags = flags;
-   hash_insert (&t->sup_page_table, &upage->hash_elem);
+   hash_insert (&t->spt, &upage->hash_elem);
    return upage;
 }
 
@@ -64,7 +64,7 @@ struct page * map_page_to_frame (void *addr, int flags)
       upage -> accessed = 0;
       upage -> flags = NEW_PAGE;
       /*Insert page into supplemental page table*/
-      hash_insert (&t->sup_page_table, &upage->hash_elem);
+      hash_insert (&t->spt, &upage->hash_elem);
       /*Create a frame */
       void *kpage = get_frame(flags);
       if (kpage)
@@ -114,7 +114,7 @@ struct page * page_lookup (void *address)
   struct page p;
   struct hash_elem *e;
   p.addr = (void *)((uint32_t)address & (~PGMASK));
-  e = hash_find (&t->sup_page_table, &p.hash_elem);
+  e = hash_find (&t->spt, &p.hash_elem);
   return e != NULL ? hash_entry (e, struct page, hash_elem) : NULL;
 }
 
