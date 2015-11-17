@@ -15,6 +15,7 @@
 #include "lib/kernel/list.h"
 #include "filesys/file.h"
 #include "threads/malloc.h"
+#include "vm/page.h"
 #ifdef USERPROG
 #include "userprog/process.h"
 #endif
