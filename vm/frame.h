@@ -7,6 +7,7 @@
 #include <hash.h>
 #include "devices/block.h"
 #include "threads/synch.h"
+#include "threads/thread.h"
 
 /* Position of a frame */
 #define POS_SWAP 		0x1
@@ -42,7 +43,7 @@ struct frame
   // which user address
   void *phys_addr;              /* Which physical address this frame refers to */
   void *v_addr;                 /* Which virtual address this maps to */
-  struct thread *owner;         /* Thread which owns this page */
+  tid_t *owner;         /* Thread which owns this page */
   struct list_elem elem;
 };
 
@@ -57,10 +58,15 @@ struct page_struct
   struct hash_elem elem;
 };
 
+typedef struct {
+    struct frame *f_ptr; // or char strVal[20];
+    void *addr;
+} tTuple;
+
 void init_frametable (void);
 
 void store_frame (struct frame *);
 
-void allocate_frame (void *v_addr, struct thread *t);
+void *allocate_frame (void *upage, tid_t tid);
 
 #endif /* vm/frame.h */

@@ -43,8 +43,8 @@ store_frame (struct frame *f) {
   list_push_back (&frame_list, &f->elem);
 }
 
-void
-allocate_frame (void *v_addr, struct thread *t) {
+void *
+allocate_frame (void *upage, tid_t tid) {
   struct list_elem * next  = list_begin (&frame_list);
   struct frame *fs = NULL;
 
@@ -63,12 +63,11 @@ allocate_frame (void *v_addr, struct thread *t) {
   if (next == NULL) {
     PANIC ("THERE ARE NO FREE PAGES IN THE FRAME TABLE\n");
   } else {
-    fs->owner = t;
-    fs->v_addr = v_addr;
     list_push_back (&frame_list, &fs->elem);
+    fs->v_addr = upage;
+    fs->owner = tid;
+    return fs->phys_addr;
   }
-
-  return;
 }
 //
 // void
