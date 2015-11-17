@@ -1,37 +1,113 @@
-#ifndef FRAME_H
-#define FRAME_H
+#ifndef VM_FRAME_H
+#define VM_FRAME_H
 
+#include <stdbool.h>
+#include <stdint.h>
+#include <list.h>
 #include <hash.h>
-#include <bitmap.h>
+#include "devices/block.h"
 #include "threads/synch.h"
-//Data structures for the frame table allocator
-#define FALSE 0
-struct frame_table {
-  //fr is a hashtable containing frame table entries
-  struct hash ft; 
-  //Used to keep track of free frames
-  struct bitmap *bm_frames; 
-  /*Required for synchronizing since the frame table is global*/
-  struct lock lock;
+
+/* Position of a frame */
+#define POS_SWAP 		0x1
+#define POS_DISK		0x2
+#define POS_MEM			0x3
+#define POSBITS			0x3
+#define POSMASK			~POSBITS
+
+/* Content type of a frame */
+#define TYPE_Executable 	0x4
+#define TYPE_MMFile 		0x8
+#define TYPE_Stack		0xc
+#define TYPEBITS		0xc
+#define TYPEMASK		~TYPEBITS
+
+/* Property bits of a frame */
+#define FS_READONLY		0x10
+#define FS_DIRTY		0x20
+#define FS_ACCESS		0x40
+#define FS_ZERO			0x80
+
+#define FS_PINNED		0x10000
+
+#define SECTOR_ERROR		SIZE_MAX
+
+/* A frame structure corresponds to exactly one frame,
+   tracking the frame whether it on memeory, disk, or swap.
+   Unit structure making up frame table */
+struct frame_struct
+{
+  uint32_t flag;                /* Flag bits */
+  uint8_t *vaddr;               /* Virtual address if on memeory */
+  size_t length;                /* Length of meaningful contents */
+  block_sector_t sector_no;     /* Sector # if on disk or swap */
+  struct lock frame_lock;	/* Lock for protecting data in frame */
+  struct list pte_list;         /* A list of pte's representing
+                                   user pages sharing this frame */
+  struct list_elem elem;
 };
 
-struct frame_entry {
-  //Pointer to the user page
-  void * frame;
-  //Pagedir of the thread that requested the frame - will be used for page eviction
-  uint32_t * pagedir;
-  //Use for other info on the frame
-  uint8_t unused;
-  //Each entry is a hash element in frame table's fr
-  struct hash_elem hash_elem;
+/* A page structure corresponds to on user virtual page,
+   it is specific to each process, and maybe more than one page
+   strucutre point to a single frame.
+   Unit structure making up supplemental page table */
+struct page_struct
+{
+  uint32_t key;
+  struct frame_struct *fs;
+  struct hash_elem elem;
 };
 
+/* A unit structure representing page pte's
+   sharing a common frame.
+   Unit structure making up pte_list in frame structure */
+struct pte_shared
+{
+  uint32_t *pte;
+  struct list_elem elem;
+};
 
-void init_frame_table (size_t frame_cnt);
-void * get_frame (int palloc_flags);
-void release_frame (void *frame);
-unsigned frame_hash (const struct hash_elem *p_, void *aux);
-bool frame_less (const struct hash_elem *a_, const struct hash_elem *b_, void *aux);
-void bitmap_init (struct bitmap *bm, size_t frame_cnt);
+void
+sup_pt_init (void);
 
-#endif
+struct page_struct *
+sup_pt_add (uint32_t *, void *, uint8_t *,
+            size_t, uint32_t, block_sector_t);
+
+bool
+sup_pt_find_and_delete (uint32_t *, void *);
+
+bool
+sup_pt_delete (uint32_t *);
+
+uint32_t *
+sup_pt_pte_lookup (uint32_t *, const void *, bool);
+
+struct page_struct *
+sup_pt_ps_lookup (uint32_t *);
+
+void
+sup_pt_set_swap_in  (struct frame_struct *, void *);
+
+void
+sup_pt_set_swap_out (struct frame_struct *, block_sector_t, bool);
+
+bool
+sup_pt_set_memory_map (uint32_t *, void *);
+
+bool
+sup_pt_fs_is_dirty  (struct frame_struct *);
+
+uint8_t *
+sup_pt_evict_frame (void);
+
+bool
+mark_page (void *, uint8_t *, size_t, uint32_t, block_sector_t);
+
+bool
+mark_shared_page (void *, struct frame_struct *);
+
+struct frame_struct*
+frame_lookup_exec (block_sector_t, uint32_t);
+
+#endif /* vm/frame.h */
