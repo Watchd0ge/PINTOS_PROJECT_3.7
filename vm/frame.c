@@ -128,15 +128,15 @@ sup_pt_add (uint32_t *pd, void *upage, uint8_t *vaddr, size_t length,
   list_init (&ps->fs->pte_list);
 
   /* Register the page itself to pte_list of frame_struct */
-  struct pte_shared *pshr =
-    (struct pte_shared *)malloc (sizeof (struct pte_shared));
-  if (pshr == NULL)
-  {
-    free (ps->fs);
-    free (ps);
-    return NULL;
-  }
-  pshr->pte = pte;
+  // struct pte_shared *pshr =
+  //   (struct pte_shared *)malloc (sizeof (struct pte_shared));
+  // if (pshr == NULL)
+  // {
+  //   free (ps->fs);
+  //   free (ps);
+  //   return NULL;
+  // }
+  // pshr->pte = pte;
   list_push_back (&ps->fs->pte_list, &pshr->elem);
   lock_release (&ps->fs->frame_lock);
 

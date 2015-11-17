@@ -290,7 +290,6 @@ load (const char *file_name, void (**eip) (void), void **esp)
   process_activate ();
 
   /* Open executable file. */
-  printf ("FILE NAME IS %s\n", file_name);
   file = filesys_open (file_name);
   if (file == NULL)
     {
