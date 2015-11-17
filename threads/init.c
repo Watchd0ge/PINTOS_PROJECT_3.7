@@ -136,7 +136,7 @@ main (void)
   while (true) {
     fs = malloc (sizeof (struct frame));
     if (fs != NULL) {
-      fs->phys_addr = palloc_get_page (PAL_USER | PAL_ZERO);
+      fs->phys_addr = palloc_get_page (PAL_USER | PAL_ZERO | PAL_ASSERT);
       if (fs->phys_addr != NULL) {
         fs->v_addr = NULL;
         fs->owner = NULL;
@@ -150,6 +150,7 @@ main (void)
         break;
     }
   }
+
   printf ("WE HAVE %d MANY PAGES\n", i);
   printf ("INIT FINISH #########################\n");
   printf ("Boot complete.\n");
