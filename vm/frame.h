@@ -71,4 +71,6 @@ void *allocate_frame (void *upage, tid_t tid);
 
 void deallocate_frame (void *phys_addr);
 
+int frame_list_size (void);
+
 #endif /* vm/frame.h */

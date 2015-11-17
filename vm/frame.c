@@ -88,3 +88,8 @@ deallocate_frame (void *kpage) {
   }
   if (next == NULL) { PANIC ("TRIED TO DEALLOCATE FRAME BUT FAILED!!!\n");}
 }
+
+int
+frame_list_size () {
+  return list_size(&frame_list);
+}
