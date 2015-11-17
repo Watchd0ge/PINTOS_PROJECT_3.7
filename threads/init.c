@@ -130,6 +130,12 @@ main (void)
 
   printf ("INIT START ##########################\n");
   sup_pt_init ();
+  int i = 0;
+  while (i < init_ram_pages) {
+    palloc_get_page(PAL_USER | PAL_ZERO);
+    i++;
+  }
+  printf ("WE HAVE %d MANY PAGES\n", i);
   printf ("INIT FINISH #########################\n");
   printf ("Boot complete.\n");
 
