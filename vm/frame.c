@@ -1,7 +1,7 @@
 #include <hash.h>
 #include <list.h>
 #include "frame.h"
-#include "swap.h"
+// #include "swap.h"
 #include "userprog/pagedir.h"
 #include "threads/thread.h"
 #include "threads/pte.h"
@@ -347,7 +347,8 @@ sup_pt_evict_frame ()
     }
 
   uint8_t *vaddr = victim->vaddr;
-  swap_out (victim);
+  // swap_out (victim);
+  ASSERT(0);
   return vaddr;
 }
 
