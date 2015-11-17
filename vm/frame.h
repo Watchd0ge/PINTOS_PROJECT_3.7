@@ -61,4 +61,6 @@ void init_frametable (void);
 
 void store_frame (struct frame *);
 
+void allocate_frame (void *v_addr, struct thread *t);
+
 #endif /* vm/frame.h */

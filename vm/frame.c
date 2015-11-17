@@ -44,13 +44,13 @@ store_frame (struct frame *f) {
 }
 
 void
-allocate_frame (void *phys_addr, void *v_addr, struct thread *t) {
+allocate_frame (void *v_addr, struct thread *t) {
   struct list_elem * next  = list_begin (&frame_list);
   struct frame *fs = NULL;
 
   /* Find an available frame */
   while (next != NULL) {
-    fs = list_entry (next, struct frame, list_elem);
+    fs = list_entry (next, struct frame, elem);
     if (fs->owner == NULL && fs->v_addr == NULL) {
       list_remove (next);
       break;
