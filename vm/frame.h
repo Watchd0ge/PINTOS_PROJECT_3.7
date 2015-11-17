@@ -69,4 +69,6 @@ void store_frame (struct frame *);
 
 void *allocate_frame (void *upage, tid_t tid);
 
+void deallocate_frame (void *phys_addr);
+
 #endif /* vm/frame.h */

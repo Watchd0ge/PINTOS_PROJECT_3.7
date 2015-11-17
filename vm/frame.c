@@ -71,8 +71,20 @@ allocate_frame (void *upage, tid_t tid) {
 }
 
 void
-deallocate_frame (struct frame *f) {
-  f->owner = NULL;
-  f->v_addr = NULL;
-  list_push_back (&frame_list, &f->elem);
+deallocate_frame (void *kpage) {
+  struct list_elem * next  = list_begin (&frame_list);
+  struct frame *fs = NULL;
+
+  /* Find the frame */
+  while (next != NULL) {
+    fs = list_entry (next, struct frame, elem);
+    if (fs->phys_addr == kpage) {
+      fs->owner = NULL;
+      fs->v_addr = NULL;
+      return;
+    } else {
+      next = list_next (next);
+    }
+  }
+  if (next == NULL) { PANIC ("TRIED TO DEALLOCATE FRAME BUT FAILED!!!\n");}
 }
