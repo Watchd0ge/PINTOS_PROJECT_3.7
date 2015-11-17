@@ -476,10 +476,10 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
       if (kpage == NULL)
         return false;
 
-      //block_sector_t sector_idx = byte_to_sector (file_get_inode (file), ofs);
+      block_sector_t sector_idx = byte_to_sector (file_get_inode (file), ofs);
 
       /* Load this page. */
-      //mark_page (upage, NULL, page_read_bytes, sector_idx);
+      mark_page (upage, NULL, page_read_bytes, sector_idx);
 
       if (file_read (file, kpage, page_read_bytes) != (int) page_read_bytes)
         {
