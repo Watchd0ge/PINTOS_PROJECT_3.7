@@ -133,15 +133,22 @@ main (void)
   init_frametable ();
   int i = 0;
   struct frame *fs;
-  while (i < 383) {
+  while (true) {
     fs = malloc (sizeof (struct frame));
-    fs->phys_addr = palloc_get_page (PAL_USER | PAL_ZERO);
-    fs->v_addr = NULL;
-    fs->owner = NULL;
-    store_frame (fs);
-    // printf ("fs->vaddr = %p\n", fs->phys_addr);
-    i++;
-    printf ("FRAMES AVAIALBLE %d\n", i);
+    if (fs != NULL) {
+      fs->phys_addr = palloc_get_page (PAL_USER | PAL_ZERO);
+      if (fs->phys_addr != NULL) {
+        fs->v_addr = NULL;
+        fs->owner = NULL;
+        store_frame (fs);
+        i++;
+        printf ("FRAMES AVAIALBLE %d\n", i);
+      } else {
+        break;
+      }
+    } else {
+        break;
+    }
   }
   printf ("WE HAVE %d MANY PAGES\n", i);
   printf ("INIT FINISH #########################\n");
