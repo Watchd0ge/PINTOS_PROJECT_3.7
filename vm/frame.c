@@ -30,10 +30,10 @@ struct frame_struct* evict_pointer;
 void
 sup_pt_init (void)
 {
-  hash_init (&sup_pt, sup_pt_hash_func, sup_pt_less_func, NULL);
+  //hash_init (&sup_pt, sup_pt_hash_func, sup_pt_less_func, NULL);
   list_init (&frame_list);
-  lock_init (&sup_pt_lock);
+  //lock_init (&sup_pt_lock);
   lock_init (&frame_list_lock);
-  lock_init (&evict_lock);
-  evict_pointer = NULL;
+  //lock_init (&evict_lock);
+  //evict_pointer = NULL;
 }
