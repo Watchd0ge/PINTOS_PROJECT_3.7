@@ -37,3 +37,13 @@ init_frametable (void)
   //lock_init (&evict_lock);
   //evict_pointer = NULL;
 }
+
+// void 
+// allocate_frame (void *phys_addr, void *v_addr, struct *thread t) {
+//   /* code */
+// }
+//
+// void
+// free_frame (struct frame *f) {
+//   /* code */
+// }
