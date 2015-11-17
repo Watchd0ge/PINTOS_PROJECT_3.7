@@ -133,7 +133,7 @@ main (void)
   init_frametable ();
   int i = 0;
   struct frame *fs;
-  while (i < 5) {
+  while (true) {
     fs = malloc (sizeof (struct frame));
     if (fs != NULL) {
       fs->phys_addr = palloc_get_page (PAL_USER | PAL_ZERO);
