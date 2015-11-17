@@ -14,6 +14,7 @@
 #include "devices/timer.h"
 #include "lib/kernel/list.h"
 #include "filesys/file.h"
+#include "threads/malloc.h"
 #ifdef USERPROG
 #include "userprog/process.h"
 #endif
