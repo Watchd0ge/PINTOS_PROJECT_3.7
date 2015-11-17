@@ -135,8 +135,8 @@ main (void)
   struct frame_struct *fs;
   while (i < 383) {
     fs = malloc (sizeof (struct frame_struct));
-    fs->phys_addr = palloc_get_page (PAL_USER | PAL_ZERO | PAL_ASSERT);
-    palloc_get_page (PAL_USER | PAL_ZERO);
+    fs->phys_addr = palloc_get_page (PAL_USER | PAL_ZERO);
+    // palloc_get_page (PAL_USER | PAL_ZERO);
     printf ("fs->vaddr = %p\n", fs->phys_addr);
     i++;
     printf ("FRAMES AVAIALBLE %d\n", i);
