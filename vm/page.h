@@ -5,7 +5,7 @@
 #include "filesys/file.h"
 #include "filesys/filesys.h"
 #include "filesys/off_t.h"
-#define NEW_PAGE 1 
+#define NEW_PAGE 1
 #define UNMAPPED_PAGE 2
 #define ZERO_PAGE 4
 #define FILE_READ_PAGE 8
@@ -17,26 +17,24 @@
 */
 
 struct sup_page_table {
-   /* Current thread's pdbr (CR3) */
-   uint8_t pd;
    /* Our SPT is a hash table containing pages */
    struct hash *pages;
 };
 
 /* Each page contains the address of the actual page
-   and the associated bits. i.e. it is actually a pte 
+   and the associated bits. i.e. it is actually a pte
 */
 struct page
-{ 
+{
    struct hash_elem hash_elem;
    /* User Virtual Address of actual page */
    void *addr;
    /* Kernel virtual address of the frame*/
    void *kaddr;
    /* Dirty set when page modified*/
-   uint8_t dirty; 
+   uint8_t dirty;
    /* Set when page has been read/written after creation */
-   uint8_t accessed; 
+   uint8_t accessed;
    uint8_t flags;
    /* Thread owner */
    struct thread * owner;
