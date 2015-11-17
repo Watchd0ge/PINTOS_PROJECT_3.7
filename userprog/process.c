@@ -503,9 +503,7 @@ setup_stack (void **esp)
   uint8_t *kpage;
   bool success = false;
 
-  // kpage = palloc_get_page (PAL_USER | PAL_ZERO);
-  // kpage = get_frame (PAL_USER | PAL_ZERO);
-  kpage = (uint8_t *)get_frame (PAL_USER | PAL_ZERO);
+  kpage = palloc_get_page (PAL_USER | PAL_ZERO);
   if (!kpage)
     {
       return success;
