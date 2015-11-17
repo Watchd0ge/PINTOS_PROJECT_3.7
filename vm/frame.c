@@ -69,8 +69,10 @@ allocate_frame (void *upage, tid_t tid) {
     return fs->phys_addr;
   }
 }
-//
-// void
-// free_frame (struct frame *f) {
-//   /* code */
-// }
+
+void
+deallocate_frame (struct frame *f) {
+  f->owner = NULL;
+  f->v_addr = NULL;
+  list_push_back (&frame_list, &f->elem);
+}
