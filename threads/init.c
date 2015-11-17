@@ -153,7 +153,7 @@ main (void)
   printf ("WE HAVE %d MANY PAGES\n", i);
   printf ("INIT FINISH #########################\n");
   printf ("Boot complete.\n");
-
+  printf ("FRAMETABLE SIZE IS : %d\n", frame_list_size());
   /* Run actions specified on kernel command line. */
   run_actions (argv);
 
