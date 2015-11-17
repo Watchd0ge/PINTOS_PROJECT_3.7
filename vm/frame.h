@@ -38,10 +38,10 @@
 struct frame_struct
 {
   uint32_t flag;                /* Flag bits */
-  uint8_t *vaddr;               /* Virtual address if on memeory */
+  uint8_t *vaddr;               /* Virtual address if on memory */
   size_t length;                /* Length of meaningful contents */
   block_sector_t sector_no;     /* Sector # if on disk or swap */
-  struct lock frame_lock;	/* Lock for protecting data in frame */
+  struct lock frame_lock;       /* Lock for protecting data in frame */
   struct list pte_list;         /* A list of pte's representing
                                    user pages sharing this frame */
   struct list_elem elem;
@@ -57,57 +57,3 @@ struct page_struct
   struct frame_struct *fs;
   struct hash_elem elem;
 };
-
-/* A unit structure representing page pte's
-   sharing a common frame.
-   Unit structure making up pte_list in frame structure */
-struct pte_shared
-{
-  uint32_t *pte;
-  struct list_elem elem;
-};
-
-void
-sup_pt_init (void);
-
-struct page_struct *
-sup_pt_add (uint32_t *, void *, uint8_t *,
-            size_t, uint32_t, block_sector_t);
-
-bool
-sup_pt_find_and_delete (uint32_t *, void *);
-
-bool
-sup_pt_delete (uint32_t *);
-
-uint32_t *
-sup_pt_pte_lookup (uint32_t *, const void *, bool);
-
-struct page_struct *
-sup_pt_ps_lookup (uint32_t *);
-
-void
-sup_pt_set_swap_in  (struct frame_struct *, void *);
-
-void
-sup_pt_set_swap_out (struct frame_struct *, block_sector_t, bool);
-
-bool
-sup_pt_set_memory_map (uint32_t *, void *);
-
-bool
-sup_pt_fs_is_dirty  (struct frame_struct *);
-
-uint8_t *
-sup_pt_evict_frame (void);
-
-bool
-mark_page (void *, uint8_t *, size_t, uint32_t, block_sector_t);
-
-bool
-mark_shared_page (void *, struct frame_struct *);
-
-struct frame_struct*
-frame_lookup_exec (block_sector_t, uint32_t);
-
-#endif /* vm/frame.h */

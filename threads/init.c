@@ -22,6 +22,7 @@
 #include "threads/palloc.h"
 #include "threads/pte.h"
 #include "threads/thread.h"
+#include "threads/malloc.h"
 #include "vm/frame.h"
 #ifdef USERPROG
 #include "userprog/process.h"
@@ -131,8 +132,10 @@ main (void)
   printf ("INIT START ##########################\n");
   sup_pt_init ();
   int i = 0;
+  struct frame_struct fs;
   while (i < init_ram_pages) {
-    palloc_get_page(PAL_USER | PAL_ZERO);
+    fs = malloc (sizeof (struct frame_struct));
+    fs->vaddr = palloc_get_page (PAL_USER | PAL_ZERO);
     i++;
   }
   printf ("WE HAVE %d MANY PAGES\n", i);
