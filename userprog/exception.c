@@ -154,29 +154,10 @@ page_fault (struct intr_frame *f)
   /* To implement virtual memory, delete the rest of the function
      body, and replace it with code that brings in the page to
      which fault_addr refers. */
-
-  /* Here the handler part begins */
-  struct thread *t = thread_current ();
-
-  /* Kill when in kernel mode and not in syscall, a kernel fault */
-  if (!user && !t->is_in_syscall)
-    {
-      kill (f);
-    }
-
-normal_page_fault:              /* Swap in the page */
-
-  success = swap_in (ps->fs);
-  if (!success)
-    goto bad_page_fault;
-
-  ps->fs->flag &= ~FS_PINNED;
-  lock_release (&ps->fs->frame_lock);
-
-  return;
-
-bad_page_fault:                 /* Terminate the process */
-  thread_current ()->process_info->exit_status = -1;
-  thread_exit ();
-  return;
+  printf ("Page fault at %p: %s error %s page in %s context.\n",
+          fault_addr,
+          not_present ? "not present" : "rights violation",
+          write ? "writing" : "reading",
+          user ? "user" : "kernel");
+  kill (f);
 }

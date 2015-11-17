@@ -55,4 +55,6 @@ struct page
  bool page_less (const struct hash_elem *a_, const struct hash_elem *b_, void *aux);
  struct page * page_lookup (void *address);
 
+ bool mark_page (void *upage, uint8_t *addr, size_t length, block_sector_t sector_no);
+
 #endif
