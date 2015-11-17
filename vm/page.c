@@ -32,7 +32,7 @@ struct page * create_page(void *addr)
 void insert_page (struct page * upage)
 {
   struct thread *t = thread_current();
-  hash_insert (t->spt, &upage->hash_elem);
+  hash_insert (&t->spt->pages, &upage->hash_elem);
 }
 
 void map_frame_to_page(void *addr, void *frame)
