@@ -44,7 +44,7 @@ store_frame (struct frame *f) {
 }
 
 void
-allocate_frame (void *phys_addr, void *v_addr, struct *thread t) {
+allocate_frame (void *phys_addr, void *v_addr, struct thread *t) {
   struct list_elem * next  = list_begin (&frame_list);
   struct frame *fs = NULL;
 
@@ -67,6 +67,8 @@ allocate_frame (void *phys_addr, void *v_addr, struct *thread t) {
     fs->v_addr = v_addr;
     list_push_back (&frame_list, &fs->elem);
   }
+
+  return;
 }
 //
 // void
