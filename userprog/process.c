@@ -19,6 +19,10 @@
 #include "threads/vaddr.h"
 #include "vm/frame.h"
 #include "vm/swap.h"
+#include "threads/pte.h"
+#include "threads/malloc.h"
+#include "filesys/inode.h"
+#include "userprog/syscall.h"
 
 static thread_func start_process NO_RETURN;
 static bool load (const char *cmdline, void (**eip) (void), void **esp);
