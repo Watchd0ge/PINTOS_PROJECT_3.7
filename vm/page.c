@@ -125,17 +125,17 @@ struct page * page_lookup (void *address)
 }
 
 /* Install_page without actually reading data from disk */
-bool
-mark_page (void *upage, uint8_t *addr,
-           size_t length, block_sector_t sector_no)
-{
-  struct thread *t = thread_current ();
-
-  if (pagedir_get_page (t->pagedir, upage) != NULL)
-    return false;
-
-  return sup_pt_add (t->pagedir, upage, addr, length, sector_no) != NULL;
-}
+// bool
+// mark_page (void *upage, uint8_t *addr,
+//            size_t length, block_sector_t sector_no)
+// {
+//   struct thread *t = thread_current ();
+//
+//   if (pagedir_get_page (t->pagedir, upage) != NULL)
+//     return false;
+//
+//   return sup_pt_add (t->pagedir, upage, addr, length, sector_no) != NULL;
+// }
 
 // /* Create an entry to sup_pt, according to the given info */
 // struct page *
