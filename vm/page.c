@@ -29,8 +29,6 @@ void sup_page_table_init (struct hash * h) {
   hash_init (h, page_hash_func, page_less_func, NULL);
 }
 
-/* Takes a frame and maps it to a page.
-   Returns the newly created page */
 bool create_file_page(struct file *file, int32_t ofs, uint8_t *upage, uint32_t read_bytes, uint32_t zero_bytes, bool writable)
 {
   struct page * sup_pt_entry = malloc (sizeof(struct page));
