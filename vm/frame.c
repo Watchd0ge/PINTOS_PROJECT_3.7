@@ -12,6 +12,8 @@
 
 #include <stdio.h>
 
+struct frame * find_in_frame_list (void *upage, tid_t tid);
+
 /* Frame Table */
 struct list frame_list;
 struct lock frame_list_lock;
