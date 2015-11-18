@@ -633,6 +633,7 @@ init_thread (struct thread *t, const char *name, int priority)
   t->end = false;
   t->success_to_load = false;
   t->spt.pages = NULL;
+  hash_init (&t->spt.pages, page_hash, page_less, NULL);
   sema_init (&t->wait_this, 0); /* For Project #2 */
   sema_init (&t->kill_this, 0);
   sema_init (&t->wait_start_process, 0);
