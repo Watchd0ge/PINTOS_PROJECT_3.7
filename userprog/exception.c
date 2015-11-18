@@ -155,13 +155,20 @@ page_fault (struct intr_frame *f)
   // sys_exit(-1);
 
   struct page *pg = get_spte (fault_addr);
-  struct frame *fs = allocate_frame (upage, thread_current()->tid);
-  pg->file->pos = pg->offset
+  struct frame *fs = allocate_frame (fault_addr, thread_current()->tid);
+  pg->file->pos = pg->offset;
   file_read (pg->file, fs->phys_addr, pg->read_bytes);
   map_page_to_frame (pg, fs);
-  install_page (fault_addr, fs->phys_addr, true);
-  printf ("GOT THIS FAR\n");
-  return;
+  struct thread *t = thread_current ();
+  if (pagedir_get_page (t->pagedir, upage) == NULL && pagedir_set_page (t->pagedir, upage, kpage, writable))
+    {
+      printf ("GOT THIS FAR\n");
+      return;
+    }
+  else
+    {
+      PANIC ("DERPS!!!!!\n");
+    }
   /* To implement virtual memory, delete the rest of the function
      body, and replace it with code that brings in the page to
      which fault_addr refers. */
