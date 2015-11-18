@@ -18,7 +18,7 @@ static bool page_less_func (const struct hash_elem *h_elem_a, const struct hash_
 {
   struct page *pga = hash_entry(h_elem_a, struct page, elem);
   struct page *pgb = hash_entry(h_elem_b, struct page, elem);
-  if (h_elem_a->user_addr < h_elem_b->user_addr)
+  if (pga->usr_addr < pgb->usr_addr)
     {
       return true;
     }
@@ -33,19 +33,19 @@ void sup_page_table_init (struct hash * h) {
    Returns the newly created page */
 bool create_file_page(struct file *file, int32_t ofs, uint8_t *upage, uint32_t read_bytes, uint32_t zero_bytes, bool writable)
 {
-  struct page * sup_page_entry = malloc (sizeof(struct page));
-  if (sup_page_entry == NULL) {
+  struct page * sup_pt_entry = malloc (sizeof(struct page));
+  if (sup_pt_entry == NULL) {
     PANIC ("NOT ENOUGH KERNEL MEMORY\n");
   } else {
-    sup_page_entry->loc         = FILE;
-    sup_page_entry->user_addr   = upage;
-    sup_page_entry->phys_addr   = NULL;
-    sup_page_entry->file        = file;
-    sup_page_entry->offset      = ofs;
-    sup_page_entry->read_bytes  = read_bytes;
-    sup_page_entry->zero_bytes  = zero_bytes;
-    sup_page_entry->writable    = writable;
-    return (hash_insert(&thread_current->spt, &sup_page_entry->h_elem) == NULL); // NULL means successful entry
+    sup_pt_entry->loc         = FILE;
+    sup_pt_entry->user_addr   = upage;
+    sup_pt_entry->phys_addr   = NULL;
+    sup_pt_entry->file        = file;
+    sup_pt_entry->offset      = ofs;
+    sup_pt_entry->read_bytes  = read_bytes;
+    sup_pt_entry->zero_bytes  = zero_bytes;
+    sup_pt_entry->writable    = writable;
+    return (hash_insert(&thread_current()->spt, &sup_pt_entry->elem) == NULL); // NULL means successful entry
   }
 }
 
