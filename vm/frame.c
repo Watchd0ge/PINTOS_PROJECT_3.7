@@ -38,14 +38,14 @@ store_frame (struct frame *f) {
 struct frame *
 allocate_frame (void *upage, tid_t tid) {
   struct frame *fs = malloc (sizeof (struct frame));
-  printf ("WE ARE IN\n");
+  // printf ("WE ARE IN\n");
   if (fs != NULL) {
     fs->phys_addr = palloc_get_page (PAL_USER | PAL_ZERO);
     if (fs->phys_addr != NULL) {
       fs->user_addr = upage;
       fs->owner = tid;
       store_frame (fs);
-      printf ("SIZE OF FRAME TABLE IS %d\n", frame_list_size ());
+      // printf ("SIZE OF FRAME TABLE IS %d\n", frame_list_size ());
       return fs;
     } else {
       free (fs);
