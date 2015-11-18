@@ -98,7 +98,7 @@ struct thread
     int priority;                       /* Priority. */
     struct list_elem allelem;           /* List element for all threads list. */
 
-    struct sup_page_table spt;
+    struct hash spt;
 
     /* Shared between thread.c and synch.c. */
     struct list_elem elem;              /* List element. */

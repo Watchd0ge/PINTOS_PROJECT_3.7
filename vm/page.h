@@ -12,7 +12,7 @@ enum location {
   FILE,
   SWAP,
   FRAME
-}
+};
 
 struct page {
   enum location loc;
@@ -28,7 +28,7 @@ struct page {
   size_t zero_bytes;
 
   bool writable;
-  struct hash_elem hashelem;
+  struct hash_elem h_elem;
 };
 
 bool create_file_page (struct file *file, int32_t ofs, uint8_t *upage, uint32_t read_bytes, uint32_t zero_bytes, bool writable);
@@ -86,7 +86,7 @@ void sup_page_table_init (struct hash * h_table);
 // bool grow_stack (void *uva);
 // struct sup_page_entry* get_spte (void *uva);
 
-#endif /* vm/page.h */
+// #endif /* vm/page.h */
 
 // #ifndef PAGE_H
 // #define PAGE_H

@@ -45,7 +45,7 @@ bool create_file_page(struct file *file, int32_t ofs, uint8_t *upage, uint32_t r
     sup_page_entry->read_bytes  = read_bytes;
     sup_page_entry->zero_bytes  = zero_bytes;
     sup_page_entry->writable    = writable;
-    return (hash_insert(&thread_current->spt, &sup_page_entry->hashelem) == NULL); // NULL means successful entry
+    return (hash_insert(&thread_current->spt, &sup_page_entry->h_elem) == NULL); // NULL means successful entry
   }
 }
 
