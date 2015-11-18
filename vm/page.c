@@ -39,7 +39,7 @@ void insert_page (struct page * upage)
 {
   struct thread *t = thread_current();
   printf ("IT FAILED HERE 0\n");
-  hash_insert (t->spt.pages, &upage->hash_elem);
+  hash_insert (&t->spt.pages, &upage->hash_elem);
 }
 
 // void map_frame_to_page(void *addr, void *frame)
