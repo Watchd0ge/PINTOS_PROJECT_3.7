@@ -63,7 +63,11 @@ find_in_frame_list (void *upage, tid_t tid) {
       list_remove (next);
       break;
     } else {
-      next = list_next (next);
+      if (is_tail(next)){
+        break;
+      } else {
+        next = list_next (next);
+      }
     }
   }
 
