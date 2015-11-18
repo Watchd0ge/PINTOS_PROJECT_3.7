@@ -57,22 +57,18 @@ struct frame *
 find_in_frame_list (void *upage, tid_t tid) {
   struct list_elem * next  = list_begin (&frame_list);
   struct frame *fs = NULL;
-  while (next != NULL) {
+  while (next != list_tail(&frame_list)) {
     fs = list_entry (next, struct frame, elem);
     if (fs->owner == NO_OWNER && fs->user_addr == NULL) {
       list_remove (next);
       break;
     } else {
-      if (is_tail(next)){
-        break;
-      } else {
-        next = list_next (next);
-      }
+      next = list_next (next);
     }
   }
 
   /* Allocate the available frame */
-  if (next == NULL) {
+  if (next == list_tail(&frame_list)) {
     // TODO: EVICTION
     PANIC ("THERE ARE NO FREE PAGES IN THE FRAME TABLE\n");
   } else {
