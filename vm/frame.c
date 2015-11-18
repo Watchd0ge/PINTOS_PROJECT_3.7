@@ -11,6 +11,7 @@
 #include "threads/init.h"
 
 #include <stdio.h>
+#define NO_OWNER -1
 
 struct frame * find_in_frame_list (void *upage, tid_t tid);
 
@@ -57,7 +58,7 @@ find_in_frame_list (void *upage, tid_t tid) {
   struct frame *fs = NULL;
   while (next != NULL) {
     fs = list_entry (next, struct frame, elem);
-    if (fs->owner == NULL && fs->user_addr == NULL) {
+    if (fs->owner == NO_OWNER && fs->user_addr == NULL) {
       list_remove (next);
       break;
     } else {
@@ -113,8 +114,8 @@ deallocate_frame (void *kpage) {
   while (next != NULL) {
     fs = list_entry (next, struct frame, elem);
     if (fs->phys_addr == kpage) {
-      fs->owner = NULL;
-      fs->v_addr = NULL;
+      fs->owner = NO_OWNER;
+      fs->user_addr = NULL;
       return;
     } else {
       next = list_next (next);
