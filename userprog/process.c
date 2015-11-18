@@ -485,11 +485,9 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
           return false;
         }
 
-      // if (create_file_page(file, ofs, upage, read_bytes, zero_bytes, true)) {
-      //
-      // } else {
-      //   PANIC ("SOMETHING WENT WRONG WITH ADDING TO THE SUP PAGE TABLE\n");
-      // }
+      if (!create_file_page(file, ofs, upage, read_bytes, zero_bytes, true)) {
+        PANIC ("SOMETHING WENT WRONG WITH ADDING TO THE SUP PAGE TABLE\n");
+      }
       // pg = create_page (upage, FILE);
       // pg->file = file;
       // pg->ofs = file_tell(file) - page_read_bytes;
