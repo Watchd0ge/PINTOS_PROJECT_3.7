@@ -463,6 +463,7 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
   ASSERT (pg_ofs (upage) == 0);
   ASSERT (ofs % PGSIZE == 0);
 
+  PANIC ("TESTING\n");
   file_seek (file, ofs);
   // struct page * pg = NULL;
   // struct frame * fs = NULL;
