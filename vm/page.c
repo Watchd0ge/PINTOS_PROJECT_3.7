@@ -8,32 +8,68 @@
 #include "filesys/inode.h"
 #include <stdbool.h>
 
-/* Implements supplemental page table
-   Code for hash table functionality taken from A.8.5 in Pintos
-   reference
-*/
+static unsigned page_hash_func (const struct hash_elem *h_elem, void *aux UNUSED)
+{
+  struct page *pg = hash_entry(h_elem, struct page, elem);
+  return hash_int((int) pg->user_addr);
+}
 
-struct page *
-sup_pt_add (uint32_t *pd, void *upage, uint8_t *vaddr, size_t length, block_sector_t sector_no);
+static bool page_less_func (const struct hash_elem *h_elem_a, const struct h_elem_b *, void *aux UNUSED)
+{
+  struct page *pga = hash_entry(h_elem_a, struct page, elem);
+  struct page *pgb = hash_entry(h_elem_b, struct page, elem);
+  if (h_elem_a->user_addr < h_elem_b->user_addr)
+    {
+      return true;
+    }
+  return false;
+}
+
+void sup_page_table_init (struct hash * h) {
+  hash_init (h, page_hash_func, page_less_func, NULL);
+}
 
 /* Takes a frame and maps it to a page.
    Returns the newly created page */
-// struct page * create_page(void *addr, int flags)
-struct page * create_page(void *addr, enum location loc)
+bool create_file_page(struct file *file, int32_t ofs, uint8_t *upage, uint32_t read_bytes, uint32_t zero_bytes, bool writable)
 {
-  struct page * upage = malloc (sizeof(struct page));
-  upage -> addr = (void *)(((uint32_t)addr) & (~PGMASK));
-  upage -> dirty = 0;
-  upage -> accessed = 0;
-  upage -> kaddr = NULL;
-  upage -> owner = thread_current ();
-  upage -> file = NULL;
-  upage -> ofs = 0;
-  upage -> loc = loc;
-  // upage -> flags = flags;
-//  hash_insert (&t->spt, &kpage->hash_elem);
-  return upage;
+  struct page * sup_page_entry = malloc (sizeof(struct page));
+  if (sup_page_entry == NULL) {
+    PANIC ("NOT ENOUGH KERNEL MEMORY\n");
+  } else {
+    sup_page_entry->loc         = FILE;
+    sup_page_entry->user_addr   = upage;
+    sup_page_entry->phys_addr   = NULL;
+    sup_page_entry->file        = file;
+    sup_page_entry->offset      = ofs;
+    sup_page_entry->read_bytes  = read_bytes;
+    sup_page_entry->zero_bytes  = zero_bytes;
+    sup_page_entry->writable    = writable;
+    return (hash_insert(&thread_current->spt, &sup_page_entry->hashelem) == NULL); // NULL means successful entry
+  }
 }
+
+// bool add_file_to_page_table (struct file *file, int32_t ofs, uint8_t *upage,
+// 			     uint32_t read_bytes, uint32_t zero_bytes,
+// 			     bool writable)
+// {
+//   struct sup_page_entry *spte = malloc(sizeof(struct sup_page_entry));
+//   if (!spte)
+//     {
+//       return false;
+//     }
+//   spte->file = file;
+//   spte->offset = ofs;
+//   spte->uva = upage;
+//   spte->read_bytes = read_bytes;
+//   spte->zero_bytes = zero_bytes;
+//   spte->writable = writable;
+//   spte->is_loaded = false;
+//   spte->type = FILE;
+//   spte->pinned = false;
+//
+//   return (hash_insert(&thread_current()->spt, &spte->elem) == NULL);
+// }
 
 void insert_page (struct page * upage)
 {

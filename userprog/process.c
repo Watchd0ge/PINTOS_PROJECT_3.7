@@ -47,6 +47,8 @@ process_execute (const char *file_name)
     return TID_ERROR;
   strlcpy (fn_copy, file_name, PGSIZE);
 
+  sup_page_table_init(&thread_current()->spt);
+
   /* Create a new thread to execute FILE_NAME. */
   //tid = thread_create (file_name, PRI_DEFAULT, start_process, fn_copy);
   tid = thread_create (file_name, PRI_DEFAULT, start_process, fn_copy);
@@ -483,10 +485,15 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
           return false;
         }
 
-      pg = create_page (upage, DISK);
-      pg->file = file;
-      pg->ofs = file_tell(file) - page_read_bytes;
-      insert_page (pg);
+      // if (create_file_page(file, ofs, upage, read_bytes, zero_bytes, true)) {
+      //
+      // } else {
+      //   PANIC ("SOMETHING WENT WRONG WITH ADDING TO THE SUP PAGE TABLE\n");
+      // }
+      // pg = create_page (upage, FILE);
+      // pg->file = file;
+      // pg->ofs = file_tell(file) - page_read_bytes;
+      // insert_page (pg);
 
       memset (kpage + page_read_bytes, 0, page_zero_bytes);
 
