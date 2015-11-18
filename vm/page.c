@@ -85,6 +85,34 @@ map_page_to_frame (struct page *pg, struct frame *fs)
   pg->zero_bytes = 0;
 }
 
+
+bool load_file (struct sup_page_entry *spte)
+{
+  // uint8_t *frame = frame_alloc(flags, spte);
+  struct frame * fs = allocate_frame(spte->user_addr, 0);
+  if (!fs)
+    {
+      return false;
+    }
+  if (spte->read_bytes > 0)
+    {
+      if ((int) spte->read_bytes != file_read_at(spte->file, fs, spte->read_bytes, spte->offset))
+        {
+          deallocate_frame(fs);
+          return false;
+        }
+      memset(fs->phys_addr + spte->read_bytes, 0, spte->zero_bytes);
+    }
+
+  if (!install_page(spte->uva, fs->phys_addr, spte->writable))
+    {
+      deallocate_frame(frame);
+      return false;
+    }
+
+  return true;
+}
+
 // bool add_file_to_page_table (struct file *file, int32_t ofs, uint8_t *upage,
 // 			     uint32_t read_bytes, uint32_t zero_bytes,
 // 			     bool writable)

@@ -155,21 +155,29 @@ page_fault (struct intr_frame *f)
   // PANIC ("SHIT\n");
   // sys_exit(-1);
 
-  struct page *pg = get_spte (fault_addr);
-  struct frame *fs = allocate_frame (fault_addr, thread_current()->tid);
-  file_seek (pg->file, pg->offset);
-  file_read (pg->file, fs->phys_addr, pg->read_bytes);
-  map_page_to_frame (pg, fs);
-  struct thread *t = thread_current ();
-  if (pagedir_get_page (t->pagedir, fault_addr) == NULL && pagedir_set_page (t->pagedir, fault_addr, fs->phys_addr, true))
+  if (not_present && fault_addr > USER_VADDR_BOTTOM && is_user_vaddr(fault_addr))
     {
-      printf ("GOT THIS FAR\n");
-      return;
+      struct page *spte = get_spte(fault_addr);
+      if (spte)
+        {
+          load = load_page(spte);
+        }
     }
-  else
-    {
-      PANIC ("DERPS!!!!!\n");
-    }
+
+  // struct page *pg = get_spte (fault_addr);
+  // struct frame *fs = allocate_frame (fault_addr, thread_current()->tid);
+  // file_seek (pg->file, pg->offset);
+  // file_read (pg->file, fs->phys_addr, pg->read_bytes);
+  // map_page_to_frame (pg, fs);
+  // struct thread *t = thread_current ();
+  // if (pagedir_get_page (t->pagedir, fault_addr) == NULL && pagedir_set_page (t->pagedir, fault_addr, fs->phys_addr, true))
+  //   {
+  //     printf ("GOT THIS FAR\n");
+  //   }
+  // else
+  //   {
+  //     PANIC ("DERPS!!!!!\n");
+  //   }
   /* To implement virtual memory, delete the rest of the function
      body, and replace it with code that brings in the page to
      which fault_addr refers. */
