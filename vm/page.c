@@ -60,10 +60,9 @@ get_spte (uint8_t *upage)
   // struct hash *h = &thread_current ()->spt;
   // struct hash_elem he = hash_find (h, &h->elem);
   // return hash_entry (he, struct page, elem);
-  struct page pg;
-  pg.user_addr = pg_round_down(upage);
-
-  struct hash_elem *e = hash_find(&thread_current()->spt, &pg.elem);
+  struct page *pg = malloc (sizeof (struct page));
+  pg->user_addr = upage;
+  struct hash_elem *e = hash_find(&thread_current()->spt, &pg->elem);
   if (!e)
     {
       return NULL;
