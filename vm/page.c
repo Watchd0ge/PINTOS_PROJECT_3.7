@@ -137,18 +137,18 @@ mark_page (void *upage, uint8_t *addr,
   return sup_pt_add (t->pagedir, upage, addr, length, sector_no) != NULL;
 }
 
-/* Create an entry to sup_pt, according to the given info */
-struct page *
-sup_pt_add (uint32_t *pd, void *upage, uint8_t *vaddr, size_t length, block_sector_t sector_no)
-{
-
-  /* Allocate page_struct, i.e., a new entry in sup_pt */
-  struct page *pg = create_page (upage);
-  if (pg == NULL)
-    return NULL;
-
-  insert_page (pg);
-
-  return pg;
-  /* Fill in sup_pt entry info */
-}
+// /* Create an entry to sup_pt, according to the given info */
+// struct page *
+// sup_pt_add (uint32_t *pd, void *upage, uint8_t *vaddr, size_t length, block_sector_t sector_no)
+// {
+//
+//   /* Allocate page_struct, i.e., a new entry in sup_pt */
+//   struct page *pg = create_page (upage);
+//   if (pg == NULL)
+//     return NULL;
+//
+//   insert_page (pg);
+//
+//   return pg;
+//   /* Fill in sup_pt entry info */
+// }
