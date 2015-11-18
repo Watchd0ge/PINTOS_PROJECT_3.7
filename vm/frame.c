@@ -1,7 +1,7 @@
 #include <hash.h>
 #include <list.h>
 #include "frame.h"
-// #include "swap.h"
+#include <stdio.h>
 #include "userprog/pagedir.h"
 #include "threads/thread.h"
 #include "threads/pte.h"
@@ -44,6 +44,7 @@ allocate_frame (void *upage, tid_t tid) {
       fs->user_addr = upage;
       fs->owner = tid;
       store_frame (fs);
+      printf ("SIZE OF FRAME TABLE IS %d\n", frame_list_size ());
       return fs;
     } else {
       free (fs);
