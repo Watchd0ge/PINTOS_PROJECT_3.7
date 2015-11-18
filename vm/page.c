@@ -10,7 +10,7 @@
 
 static unsigned page_hash_func (const struct hash_elem *h_elem, void *aux UNUSED)
 {
-  struct page *pg = hash_entry(h_elem, struct page, elem);
+  struct page *pg = hash_entry(h_elem, struct page, hash_elem);
   return hash_int((int) pg->user_addr);
 }
 
