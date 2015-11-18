@@ -18,7 +18,7 @@ static bool page_less_func (const struct hash_elem *h_elem_a, const struct hash_
 {
   struct page *pga = hash_entry(h_elem_a, struct page, elem);
   struct page *pgb = hash_entry(h_elem_b, struct page, elem);
-  if (pga->usr_addr < pgb->usr_addr)
+  if (pga->user_addr < pgb->user_addr)
     {
       return true;
     }
@@ -71,12 +71,12 @@ bool create_file_page(struct file *file, int32_t ofs, uint8_t *upage, uint32_t r
 //   return (hash_insert(&thread_current()->spt, &spte->elem) == NULL);
 // }
 
-void insert_page (struct page * upage)
-{
-  struct thread *t = thread_current();
-  printf ("IT FAILED HERE 0\n");
-  hash_insert (&t->spt.pages, &upage->hash_elem);
-}
+// void insert_page (struct page * upage)
+// {
+//   struct thread *t = thread_current();
+//   printf ("IT FAILED HERE 0\n");
+//   hash_insert (&t->spt.pages, &upage->hash_elem);
+// }
 
 // void map_frame_to_page(void *addr, void *frame)
 // {
@@ -126,40 +126,40 @@ void insert_page (struct page * upage)
 //     }
 // }
 
-void set_page_accessed(struct page *page)
-{
-  page->accessed = 1;
-}
-
-void set_page_dirty(struct page * page)
-{
-  page->dirty = 1;
-}
-
-unsigned page_hash (const struct hash_elem *p_, void *aux UNUSED)
-{
-  const struct page *p = hash_entry (p_, struct page, hash_elem);
-  return hash_bytes (&p->addr, sizeof p->addr);
-}
-
-bool page_less (const struct hash_elem *a_, const struct hash_elem *b_,
-                void *aux UNUSED)
-{
-  const struct page *a = hash_entry (a_, struct page, hash_elem);
-  const struct page *b = hash_entry (b_, struct page, hash_elem);
-
-  return a->addr < b->addr;
-}
-
-struct page * page_lookup (void *address)
-{
-  struct thread *t = thread_current();
-  struct page p;
-  struct hash_elem *e;
-  p.addr = (void *)((uint32_t)address & (~PGMASK));
-  e = hash_find (t->spt.pages, &p.hash_elem);
-  return e != NULL ? hash_entry (e, struct page, hash_elem) : NULL;
-}
+// void set_page_accessed(struct page *page)
+// {
+//   page->accessed = 1;
+// }
+//
+// void set_page_dirty(struct page * page)
+// {
+//   page->dirty = 1;
+// }
+//
+// unsigned page_hash (const struct hash_elem *p_, void *aux UNUSED)
+// {
+//   const struct page *p = hash_entry (p_, struct page, hash_elem);
+//   return hash_bytes (&p->addr, sizeof p->addr);
+// }
+//
+// bool page_less (const struct hash_elem *a_, const struct hash_elem *b_,
+//                 void *aux UNUSED)
+// {
+//   const struct page *a = hash_entry (a_, struct page, hash_elem);
+//   const struct page *b = hash_entry (b_, struct page, hash_elem);
+//
+//   return a->addr < b->addr;
+// }
+//
+// struct page * page_lookup (void *address)
+// {
+//   struct thread *t = thread_current();
+//   struct page p;
+//   struct hash_elem *e;
+//   p.addr = (void *)((uint32_t)address & (~PGMASK));
+//   e = hash_find (t->spt.pages, &p.hash_elem);
+//   return e != NULL ? hash_entry (e, struct page, hash_elem) : NULL;
+// }
 
 /* Install_page without actually reading data from disk */
 // bool
