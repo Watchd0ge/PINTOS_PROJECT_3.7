@@ -483,7 +483,7 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
           return false;
         }
 
-      // pg = create_page (upage, DISK);
+      pg = create_page (upage, DISK);
       // pg->file = file;
       // pg->ofs = file_tell(file) - page_read_bytes;
       // insert_page (pg);
