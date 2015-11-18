@@ -475,15 +475,16 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
       size_t page_zero_bytes = PGSIZE - page_read_bytes;
 
       /* Get a page of memory. */
-      // uint8_t *kpage = palloc_get_page (PAL_USER);
-      fs = allocate_frame (upage, thread_current()->tid);
-      uint8_t *kpage = fs->phys_addr;
+      uint8_t *kpage = palloc_get_page (PAL_USER);
+      // fs = allocate_frame (upage, thread_current()->tid);
+      // uint8_t *kpage = fs->phys_addr;
       if (kpage == NULL)
         return false;
 
       if (file_read (file, kpage, page_read_bytes) != (int) page_read_bytes)
         {
-          deallocate_frame (kpage);
+          palloc_free_page (kpage);
+          // deallocate_frame (kpage);
           return false;
         }
 
@@ -500,8 +501,8 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
       /* Add the page to the process's address space. */
       if (!install_page (upage, kpage, writable))
         {
-          deallocate_frame (kpage);
-          // palloc_free_page (kpage);
+          // deallocate_frame (kpage);
+          palloc_free_page (kpage);
           return false;
         }
 
@@ -510,7 +511,6 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
       zero_bytes -= page_zero_bytes;
       upage += PGSIZE;
     }
-  // deallocate_frame (kpage);
   return true;
 }
 
@@ -524,17 +524,17 @@ setup_stack (void **esp)
   bool success = false;
   struct frame *fs = NULL;
 
-  fs = allocate_frame (upage, thread_current ()->tid);
-  kpage = fs->phys_addr;
-  // kpage = palloc_get_page (PAL_USER | PAL_ZERO | PAL_ASSERT);
+  // fs = allocate_frame (upage, thread_current ()->tid);
+  // kpage = fs->phys_addr;
+  kpage = palloc_get_page (PAL_USER | PAL_ZERO | PAL_ASSERT);
   if (kpage != NULL)
     {
       success = install_page (upage, kpage, true);
       if (success)
         *esp = PHYS_BASE;
       else
-        deallocate_frame (kpage);
-        // palloc_free_page (kpage);
+        // deallocate_frame (kpage);
+        palloc_free_page (kpage);
     }
   return success;
 }
