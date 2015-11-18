@@ -13,7 +13,7 @@ struct frame
 {
   void *phys_addr;              /* Which physical address this frame refers to */
   void *user_addr;                 /* Which virtual address this maps to */
-  void *owner;                 /* Thread which owns this page */
+  tid_t owner;                 /* Thread which owns this page */
   struct list_elem elem;
 };
 
