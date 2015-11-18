@@ -464,8 +464,8 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
   ASSERT (ofs % PGSIZE == 0);
 
   file_seek (file, ofs);
-  struct page * pg = NULL;
-  struct frame * fs = NULL;
+  // struct page * pg = NULL;
+  // struct frame * fs = NULL;
   while (read_bytes > 0 || zero_bytes > 0)
     {
       /* Calculate how to fill this page.
@@ -488,7 +488,7 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
           // return false;
         // }
 
-      if (!create_file_page(file, ofs, upage, read_bytes, zero_bytes, true)) {
+      if (!create_file_page(file, ofs, upage, read_bytes, zero_bytes, writeable)) {
         // PANIC ("SOMETHING WENT WRONG WITH ADDING TO THE SUP PAGE TABLE\n");
         return false;
       }
