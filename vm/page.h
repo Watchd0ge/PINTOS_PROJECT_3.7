@@ -36,7 +36,7 @@ bool create_file_page (struct file *file, int32_t ofs, uint8_t *upage, uint32_t 
 void sup_page_table_init (struct hash * h_table);
 struct page *get_spte (uint8_t *upage);
 
-void map_page_to_frame (struct page *, struct frame *);
+// void map_page_to_frame (struct page *, struct frame *);
 bool load_file (struct page *spte);
 
 #endif /* vm/page.h */
