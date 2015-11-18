@@ -10,11 +10,11 @@
 
 static unsigned page_hash_func (const struct hash_elem *h_elem, void *aux UNUSED)
 {
-  struct page *pg = hash_entry(h_elem, struct page, hash_elem);
+  struct page *pg = hash_entry(h_elem, struct page, elem);
   return hash_int((int) pg->user_addr);
 }
 
-static bool page_less_func (const struct hash_elem *h_elem_a, const struct h_elem_b *, void *aux UNUSED)
+static bool page_less_func (const struct hash_elem *h_elem_a, const struct hash_elem *h_elem_b, void *aux UNUSED)
 {
   struct page *pga = hash_entry(h_elem_a, struct page, elem);
   struct page *pgb = hash_entry(h_elem_b, struct page, elem);
