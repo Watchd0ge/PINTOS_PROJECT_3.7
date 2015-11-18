@@ -8,13 +8,15 @@
 #include "filesys/inode.h"
 #include <stdbool.h>
 
-static unsigned page_hash_func (const struct hash_elem *h_elem, void *aux UNUSED)
+static unsigned
+page_hash_func (const struct hash_elem *h_elem, void *aux UNUSED)
 {
   struct page *pg = hash_entry(h_elem, struct page, elem);
   return hash_int((int) pg->user_addr);
 }
 
-static bool page_less_func (const struct hash_elem *h_elem_a, const struct hash_elem *h_elem_b, void *aux UNUSED)
+static bool
+page_less_func (const struct hash_elem *h_elem_a, const struct hash_elem *h_elem_b, void *aux UNUSED)
 {
   struct page *pga = hash_entry(h_elem_a, struct page, elem);
   struct page *pgb = hash_entry(h_elem_b, struct page, elem);
@@ -25,11 +27,13 @@ static bool page_less_func (const struct hash_elem *h_elem_a, const struct hash_
   return false;
 }
 
-void sup_page_table_init (struct hash * h) {
+void
+sup_page_table_init (struct hash * h) {
   hash_init (h, page_hash_func, page_less_func, NULL);
 }
 
-bool create_file_page(struct file *file, int32_t ofs, uint8_t *upage, uint32_t read_bytes, uint32_t zero_bytes, bool writable)
+bool
+create_file_page(struct file *file, int32_t ofs, uint8_t *upage, uint32_t read_bytes, uint32_t zero_bytes, bool writable)
 {
   struct page * sup_pt_entry = malloc (sizeof(struct page));
   if (sup_pt_entry == NULL) {
@@ -45,6 +49,29 @@ bool create_file_page(struct file *file, int32_t ofs, uint8_t *upage, uint32_t r
     sup_pt_entry->writable    = writable;
     return (hash_insert(&thread_current()->spt, &sup_pt_entry->elem) == NULL); // NULL means successful entry
   }
+}
+
+struct page *
+get_spte (uint8_t *upage)
+{
+  struct hash *h = &thread_current ()->spt;
+  struct hash_elem he = hash_find (h, upage);
+  return hash_entry (he, struct page, elem);
+}
+
+void
+map_page_to_frame (struct page *pg, struct frame *fs) {
+  /* ADD THE UPAGE TO THE FRAME */
+  fs->user_addr = pg->user_addr;
+  fs->owner = thread_current ()->tid;
+
+  /* UPDATE THE PAGE ENTRY TO REFLECT MAPPING TO A FRAME */
+  pg->loc = FRAME;
+  pg->phys_addr = fs->phys_addr;
+  pg->file = NULL;
+  pg->offset = 0;
+  pg->read_bytes = 0;
+  pg->zero_bytes = 0;
 }
 
 // bool add_file_to_page_table (struct file *file, int32_t ofs, uint8_t *upage,
