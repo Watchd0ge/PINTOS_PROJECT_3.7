@@ -13,7 +13,7 @@ struct frame
 {
   void *phys_addr;              /* Which physical address this frame refers to */
   void *user_addr;                 /* Which virtual address this maps to */
-  tid_t owner;                 /* Thread which owns this page */
+  void *owner;                 /* Thread which owns this page */
   struct list_elem elem;
 };
 
@@ -21,7 +21,7 @@ void init_frametable (void);
 
 void store_frame (struct frame *);
 
-struct frame *allocate_frame (void *upage, tid_t tid);
+struct frame *allocate_frame (void *upage, void *tid);
 
 void deallocate_frame (void *phys_addr);
 
