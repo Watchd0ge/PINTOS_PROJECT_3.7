@@ -60,7 +60,8 @@ get_spte (uint8_t *upage)
 }
 
 void
-map_page_to_frame (struct page *pg, struct frame *fs) {
+map_page_to_frame (struct page *pg, struct frame *fs)
+{
   /* ADD THE UPAGE TO THE FRAME */
   fs->user_addr = pg->user_addr;
   fs->owner = thread_current ()->tid;

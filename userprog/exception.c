@@ -7,6 +7,7 @@
 #include "threads/thread.h"
 #include "vm/frame.h"
 #include "vm/page.h"
+#include "userprog/pagedir.h"
 
 /* Number of page faults processed. */
 static long long page_fault_cnt;
@@ -160,7 +161,7 @@ page_fault (struct intr_frame *f)
   file_read (pg->file, fs->phys_addr, pg->read_bytes);
   map_page_to_frame (pg, fs);
   struct thread *t = thread_current ();
-  if (pagedir_get_page (t->pagedir, upage) == NULL && pagedir_set_page (t->pagedir, upage, kpage, writable))
+  if (pagedir_get_page (t->pagedir, fault_addr) == NULL && pagedir_set_page (t->pagedir, fault_addr, fs->phys_addr, true))
     {
       printf ("GOT THIS FAR\n");
       return;
