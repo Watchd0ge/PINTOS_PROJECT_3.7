@@ -38,6 +38,7 @@ struct page * create_page(void *addr, enum location loc)
 void insert_page (struct page * upage)
 {
   struct thread *t = thread_current();
+  printf ("IT FAILED HERE 0\n");
   hash_insert (t->spt.pages, &upage->hash_elem);
 }
 
