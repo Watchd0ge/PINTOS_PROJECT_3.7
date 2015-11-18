@@ -19,6 +19,12 @@
    spt keeps track of all pages accessed/modified by thread
 */
 
+enum location{
+    FRAME,
+    SWAP,
+    DISK
+};
+
 struct sup_page_table {
    /* Our SPT is a hash table containing pages */
    struct hash *pages;
@@ -42,7 +48,10 @@ struct page
    /* Thread owner */
    struct thread * owner;
    /* pointer to a file (if any) the page will access*/
+   struct file * file;
    off_t ofs;
+   /* location of page */
+   enum location loc;
    bool writable;
 };
 

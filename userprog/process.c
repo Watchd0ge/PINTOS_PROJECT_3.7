@@ -462,6 +462,7 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
   ASSERT (ofs % PGSIZE == 0);
 
   file_seek (file, ofs);
+  struct page * pg = NULL;
   while (read_bytes > 0 || zero_bytes > 0)
     {
       /* Calculate how to fill this page.
@@ -476,16 +477,17 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
       if (kpage == NULL)
         return false;
 
-      block_sector_t sector_idx = byte_to_sector (file_get_inode (file), ofs);
-
-      /* Load this page. */
-      //mark_page (upage, NULL, page_read_bytes, sector_idx);
-
       if (file_read (file, kpage, page_read_bytes) != (int) page_read_bytes)
         {
           deallocate_frame (kpage);
           return false;
         }
+
+      pg = create_page (upage, DISK);
+      pg->file = file;
+      pg->ofs = file->ofs - page_read_bytes;
+      insert_page (pg);
+
       memset (kpage + page_read_bytes, 0, page_zero_bytes);
 
       /* Add the page to the process's address space. */
@@ -501,6 +503,7 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
       zero_bytes -= page_zero_bytes;
       upage += PGSIZE;
     }
+  // deallocate_frame (kpage);
   return true;
 }
 

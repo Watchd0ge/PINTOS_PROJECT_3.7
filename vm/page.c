@@ -19,7 +19,7 @@ sup_pt_add (uint32_t *pd, void *upage, uint8_t *vaddr, size_t length, block_sect
 /* Takes a frame and maps it to a page.
    Returns the newly created page */
 // struct page * create_page(void *addr, int flags)
-struct page * create_page(void *addr)
+struct page * create_page(void *addr, enum location loc)
 {
   struct page * upage = malloc (sizeof(struct page));
   upage -> addr = (void *)(((uint32_t)addr) & (~PGMASK));
@@ -27,6 +27,9 @@ struct page * create_page(void *addr)
   upage -> accessed = 0;
   upage -> kaddr = NULL;
   upage -> owner = thread_current ();
+  upage -> file = NULL;
+  upage -> ofs = 0;
+  upage -> loc = loc;
   // upage -> flags = flags;
 //  hash_insert (&t->spt, &kpage->hash_elem);
   return upage;
