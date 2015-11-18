@@ -56,7 +56,7 @@ struct page
 };
 
  // struct page * create_page(void *addr, int flags);
- struct page * create_page(void *addr);
+ struct page * create_page(void *addr, enum location);
  struct page * create_unmapped_page (void *addr, uint8_t flags);
  void insert_page (struct page * upage);
  void map_frame_to_page (void *addr, void *frame);
