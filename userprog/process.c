@@ -486,6 +486,7 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
         }
 
       if (!create_file_page(file, ofs, upage, read_bytes, zero_bytes, true)) {
+        printf ("FUCK ME\n");
         PANIC ("SOMETHING WENT WRONG WITH ADDING TO THE SUP PAGE TABLE\n");
       }
       // pg = create_page (upage, FILE);
