@@ -486,7 +486,7 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
       pg = create_page (upage, DISK);
       pg->file = file;
       pg->ofs = file_tell(file) - page_read_bytes;
-      // insert_page (pg);
+      insert_page (pg);
 
       memset (kpage + page_read_bytes, 0, page_zero_bytes);
 
