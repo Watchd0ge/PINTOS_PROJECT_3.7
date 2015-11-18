@@ -12,10 +12,6 @@
 
 #include <stdio.h>
 
-/* Supplemental Page Table is global. */
-struct hash sup_pt;
-struct lock sup_pt_lock;
-
 /* Frame Table */
 struct list frame_list;
 struct lock frame_list_lock;
@@ -23,24 +19,60 @@ struct lock frame_list_lock;
 /* Lock for frame eviction */
 struct lock evict_lock;
 
-/* "Hand" in clock algorithm for frame eviction */
-struct frame_struct* evict_pointer;
-
 /* Initialize supplemental page table and frame table */
 void
 init_frametable (void)
 {
-  //hash_init (&sup_pt, sup_pt_hash_func, sup_pt_less_func, NULL);
   list_init (&frame_list);
-  //lock_init (&sup_pt_lock);
   lock_init (&frame_list_lock);
-  //lock_init (&evict_lock);
-  //evict_pointer = NULL;
 }
 
 void
 store_frame (struct frame *f) {
   list_push_back (&frame_list, &f->elem);
+}
+
+struct frame *
+allocate_frame (void *upage, tid_t tid) {
+  struct frame *fs = malloc (sizeof (struct frame));
+  if (fs != NULL) {
+    fs->phys_addr = palloc_get_page (PAL_USER | PAL_ZERO);
+    if (fs->phys_addr != NULL) {
+      fs->user_addr = upage;
+      fs->owner = tid;
+      store_frame (fs);
+      return fs;
+    } else {
+      free (fs);
+      return find_in_frame_list (upage, tid);
+    }
+  }
+}
+
+struct frame *
+find_in_frame_list (void *upage, tid_t tid) {
+  struct list_elem * next  = list_begin (&frame_list);
+  struct frame *fs = NULL;
+  while (next != NULL) {
+    fs = list_entry (next, struct frame, elem);
+    if (fs->owner == NULL && fs->user_addr == NULL) {
+      list_remove (next);
+      break;
+    } else {
+      next = list_next (next);
+    }
+  }
+
+  /* Allocate the available frame */
+  if (next == NULL) {
+    // TODO: EVICTION
+    PANIC ("THERE ARE NO FREE PAGES IN THE FRAME TABLE\n");
+  } else {
+    list_push_back (&frame_list, &fs->elem);
+    fs->user_addr = upage;
+    fs->owner = tid;
+    return fs;
+  }
 }
 
 void *

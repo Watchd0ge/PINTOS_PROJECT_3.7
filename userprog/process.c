@@ -465,6 +465,7 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
 
   file_seek (file, ofs);
   struct page * pg = NULL;
+  struct frame * fs = NULL;
   while (read_bytes > 0 || zero_bytes > 0)
     {
       /* Calculate how to fill this page.
@@ -475,7 +476,8 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
 
       /* Get a page of memory. */
       // uint8_t *kpage = palloc_get_page (PAL_USER);
-      uint8_t *kpage = allocate_frame (upage, thread_current()->tid);
+      fs = allocate_frame (upage, thread_current()->tid)
+      uint8_t *kpage = fs->phys_addr;
       if (kpage == NULL)
         return false;
 
@@ -486,7 +488,6 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
         }
 
       if (!create_file_page(file, ofs, upage, read_bytes, zero_bytes, true)) {
-        printf ("FUCK ME\n");
         PANIC ("SOMETHING WENT WRONG WITH ADDING TO THE SUP PAGE TABLE\n");
       }
       // pg = create_page (upage, FILE);
@@ -521,8 +522,10 @@ setup_stack (void **esp)
   uint8_t *kpage;
   uint8_t *upage = ((uint8_t *) PHYS_BASE) - PGSIZE;
   bool success = false;
+  struct frame *fs = NULL;
 
-  kpage = allocate_frame (upage, thread_current ()->tid);
+  fs = allocate_frame (upage, thread_current ()->tid);
+  kpage = fs->phys_addr;
   // kpage = palloc_get_page (PAL_USER | PAL_ZERO | PAL_ASSERT);
   if (kpage != NULL)
     {
