@@ -7,6 +7,8 @@
 #include "devices/block.h"
 #include "filesys/inode.h"
 #include <stdbool.h>
+#include "vm/frame.h"
+#include "vm/page.h"
 
 static unsigned
 page_hash_func (const struct hash_elem *h_elem, void *aux UNUSED)
