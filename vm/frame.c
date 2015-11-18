@@ -38,6 +38,7 @@ store_frame (struct frame *f) {
 struct frame *
 allocate_frame (void *upage, tid_t tid) {
   struct frame *fs = malloc (sizeof (struct frame));
+  printf ("WE ARE IN\n");
   if (fs != NULL) {
     fs->phys_addr = palloc_get_page (PAL_USER | PAL_ZERO);
     if (fs->phys_addr != NULL) {
