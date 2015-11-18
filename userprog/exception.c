@@ -156,7 +156,7 @@ page_fault (struct intr_frame *f)
 
   struct page *pg = get_spte (fault_addr);
   struct frame *fs = allocate_frame (fault_addr, thread_current()->tid);
-  pg->file->pos = pg->offset;
+  file_seek (pg->file, pg->offset);
   file_read (pg->file, fs->phys_addr, pg->read_bytes);
   map_page_to_frame (pg, fs);
   struct thread *t = thread_current ();
