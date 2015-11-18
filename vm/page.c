@@ -86,27 +86,28 @@ map_page_to_frame (struct page *pg, struct frame *fs)
 }
 
 
-bool load_file (struct sup_page_entry *spte)
+bool load_file (struct page *spte)
 {
   // uint8_t *frame = frame_alloc(flags, spte);
   struct frame * fs = allocate_frame(spte->user_addr, 0);
   if (!fs)
     {
+      PANIC ("NO FRAMES!!!\n");
       return false;
     }
   if (spte->read_bytes > 0)
     {
-      if ((int) spte->read_bytes != file_read_at(spte->file, fs, spte->read_bytes, spte->offset))
+      if ((int) spte->read_bytes != file_read_at(spte->file, fs->phys_addr, spte->read_bytes, spte->offset))
         {
-          deallocate_frame(fs);
+          deallocate_frame(fs->phys_addr);
           return false;
         }
       memset(fs->phys_addr + spte->read_bytes, 0, spte->zero_bytes);
     }
 
-  if (!install_page(spte->uva, fs->phys_addr, spte->writable))
+  if (!install_page(spte->user_addr, fs->phys_addr, spte->writable))
     {
-      deallocate_frame(frame);
+      deallocate_frame(fs->phys_addr);
       return false;
     }
 

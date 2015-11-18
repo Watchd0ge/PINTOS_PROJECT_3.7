@@ -155,14 +155,8 @@ page_fault (struct intr_frame *f)
   // PANIC ("SHIT\n");
   // sys_exit(-1);
 
-  if (not_present && fault_addr > USER_VADDR_BOTTOM && is_user_vaddr(fault_addr))
-    {
-      struct page *spte = get_spte(fault_addr);
-      if (spte)
-        {
-          load = load_page(spte);
-        }
-    }
+  struct page *spte = get_spte(fault_addr);
+  if (spte) { load_file(spte); }
 
   // struct page *pg = get_spte (fault_addr);
   // struct frame *fs = allocate_frame (fault_addr, thread_current()->tid);
