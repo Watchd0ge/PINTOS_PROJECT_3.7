@@ -149,11 +149,21 @@ page_fault (struct intr_frame *f)
   write = (f->error_code & PF_W) != 0;
   user = (f->error_code & PF_U) != 0;
 
+  PANIC ("SHIT\n");
   sys_exit(-1);
 
   /* To implement virtual memory, delete the rest of the function
      body, and replace it with code that brings in the page to
      which fault_addr refers. */
+
+  // extract entry from sup page table using fault_addr
+  // struct frame * fs = allocate_frame (fault_addr, current_thread()->tid);
+  // if it is in file, then we will use file_read (kpage)
+  // update sup page table entry
+  // update frame information
+  // install_page();
+  // return;
+
   printf ("Page fault at %p: %s error %s page in %s context.\n",
           fault_addr,
           not_present ? "not present" : "rights violation",
