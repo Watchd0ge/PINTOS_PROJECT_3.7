@@ -7,6 +7,7 @@
 #include "devices/block.h"
 #include "filesys/inode.h"
 #include <stdbool.h>
+#include <hash.h>
 
 static unsigned
 page_hash_func (const struct hash_elem *h_elem, void *aux UNUSED)
@@ -55,7 +56,7 @@ struct page *
 get_spte (uint8_t *upage)
 {
   struct hash *h = &thread_current ()->spt;
-  struct hash_elem he = hash_find (h, upage);
+  struct hash_elem he = hash_find (h, &h->elem);
   return hash_entry (he, struct page, elem);
 }
 

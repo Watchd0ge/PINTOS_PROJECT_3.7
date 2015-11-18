@@ -7,6 +7,7 @@
 #include "filesys/off_t.h"
 #include "filesys/inode.h"
 #include "devices/block.h"
+#include "vm/frame.h"
 
 enum location {
   FILE,
