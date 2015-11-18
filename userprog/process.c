@@ -489,7 +489,8 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
         // }
 
       if (!create_file_page(file, ofs, upage, read_bytes, zero_bytes, true)) {
-        PANIC ("SOMETHING WENT WRONG WITH ADDING TO THE SUP PAGE TABLE\n");
+        // PANIC ("SOMETHING WENT WRONG WITH ADDING TO THE SUP PAGE TABLE\n");
+        return false;
       }
 
       // memset (kpage + page_read_bytes, 0, page_zero_bytes);
