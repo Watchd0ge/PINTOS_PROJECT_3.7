@@ -476,7 +476,7 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
 
       /* Get a page of memory. */
       // uint8_t *kpage = palloc_get_page (PAL_USER);
-      fs = allocate_frame (upage, thread_current()->tid)
+      fs = allocate_frame (upage, thread_current()->tid);
       uint8_t *kpage = fs->phys_addr;
       if (kpage == NULL)
         return false;
