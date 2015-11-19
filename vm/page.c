@@ -55,19 +55,14 @@ create_file_page(struct file *file, int32_t ofs, uint8_t *upage, uint32_t read_b
 }
 
 struct page *
-get_spte (uint8_t *upage)
+get_spte (void *upage)
 {
-  // struct hash *h = &thread_current ()->spt;
-  // struct hash_elem he = hash_find (h, &h->elem);
-  // return hash_entry (he, struct page, elem);
-  struct page *pg = malloc (sizeof (struct page));
-  pg->user_addr = upage;
-  struct hash_elem *e = hash_find(&thread_current()->spt, &pg->elem);
-  if (!e)
-    {
-      return NULL;
-    }
-  return hash_entry (e, struct page, elem);
+  struct page pg;
+  struct hash_elem *e;
+
+  pg.user_addr = upage;
+  e = hash_find (&thread_current()->spt, &pg.hash_elem);
+  return e != NULL ? hash_entry (e, struct page, hash_elem) : NULL;
 }
 
 void
