@@ -129,32 +129,10 @@ main (void)
   filesys_init (format_filesys);
 #endif
 
-  // printf ("INIT START ##########################\n");
   init_frametable ();
-  // int i = 0;
-  // struct frame *fs;
-  // while (i < 300) {
-  //   fs = malloc (sizeof (struct frame));
-  //   if (fs != NULL) {
-  //     fs->phys_addr = palloc_get_page (PAL_USER | PAL_ZERO | PAL_ASSERT);
-  //     if (fs->phys_addr != NULL) {
-  //       fs->v_addr = NULL;
-  //       fs->owner = NULL;
-  //       store_frame (fs);
-  //       i++;
-  //       // printf ("FRAMES AVAIALBLE %d\n", i);
-  //     } else {
-  //       break;
-  //     }
-  //   } else {
-  //       break;
-  //   }
-  // }
 
-  // printf ("WE HAVE %d MANY PAGES\n", i);
-  // printf ("INIT FINISH #########################\n");
   printf ("Boot complete.\n");
-  // printf ("FRAMETABLE SIZE IS : %d\n", frame_list_size());
+
   /* Run actions specified on kernel command line. */
   run_actions (argv);
 
