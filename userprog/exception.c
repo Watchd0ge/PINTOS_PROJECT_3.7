@@ -152,16 +152,6 @@ page_fault (struct intr_frame *f)
   write = (f->error_code & PF_W) != 0;
   user = (f->error_code & PF_U) != 0;
 
-  // sys_exit (-1);
-
-  printf ("Page fault at %p: %s error %s page in %s context.\n",
-    fault_addr,
-    not_present ? "not present" : "rights violation",
-    write ? "writing" : "reading",
-    user ? "user" : "kernel");
-
-  printf ("IN EXCEPTION PHYSICAL ADDR IS SUPPOSED TO BE AT %p ###############\n",pagedir_get_page (thread_current()->pagedir, fault_addr));
-
   struct page *spte = get_spte(fault_addr);
   if (spte) { load_file(spte); }
   else
@@ -173,37 +163,4 @@ page_fault (struct intr_frame *f)
 	      user ? "user" : "kernel");
       kill (f);
     }
-
-  // struct page *pg = get_spte (fault_addr);
-  // struct frame *fs = allocate_frame (fault_addr, thread_current()->tid);
-  // file_seek (pg->file, pg->offset);
-  // file_read (pg->file, fs->phys_addr, pg->read_bytes);
-  // map_page_to_frame (pg, fs);
-  // struct thread *t = thread_current ();
-  // if (pagedir_get_page (t->pagedir, fault_addr) == NULL && pagedir_set_page (t->pagedir, fault_addr, fs->phys_addr, true))
-  //   {
-  //     printf ("GOT THIS FAR\n");
-  //   }
-  // else
-  //   {
-  //     PANIC ("DERPS!!!!!\n");
-  //   }
-  /* To implement virtual memory, delete the rest of the function
-     body, and replace it with code that brings in the page to
-     which fault_addr refers. */
-
-  // extract entry from sup page table using fault_addr
-  // struct frame * fs = allocate_frame (fault_addr, current_thread()->tid);
-  // if it is in file, then we will use file_read (kpage)
-  // update sup page table entry
-  // update frame information
-  // install_page();
-  // return;
-
-  // printf ("Page fault at %p: %s error %s page in %s context.\n",
-  //         fault_addr,
-  //         not_present ? "not present" : "rights violation",
-  //         write ? "writing" : "reading",
-  //         user ? "user" : "kernel");
-  // kill (f);
 }
