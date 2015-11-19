@@ -464,8 +464,7 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
   ASSERT (ofs % PGSIZE == 0);
 
   file_seek (file, ofs);
-  // struct page * pg = NULL;
-  // struct frame * fs = NULL;
+  struct frame * fs = NULL;
   while (read_bytes > 0 || zero_bytes > 0)
     {
       /* Calculate how to fill this page.
@@ -475,7 +474,6 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
       size_t page_zero_bytes = PGSIZE - page_read_bytes;
 
       /* Get a page of memory. */
-      uint8_t *kpage = palloc_get_page (PAL_USER);
       fs = allocate_frame (upage);
       uint8_t *kpage = fs->phys_addr;
       if (kpage == NULL)
@@ -496,7 +494,7 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
       memset (kpage + page_read_bytes, 0, page_zero_bytes);
 
       /* Add the page to the process's address space. */
-      if (!install_page (upage, kpage, writable))
+      if (!install_page (upage, kpage, writeable))
         {
           deallocate_frame (kpage);
           // palloc_free_page (kpage);
