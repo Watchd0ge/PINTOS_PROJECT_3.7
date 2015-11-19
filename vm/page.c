@@ -35,8 +35,10 @@ page_less_func (const struct hash_elem *h_elem_a, const struct hash_elem *h_elem
 
 void
 sup_page_table_init (struct thread *t) {
+  printf ("PAGE ADDR BEFORE IS %p ################\n", t->spt);
   t->spt = malloc (sizeof (struct hash));
-  hash_init (&t->spt, page_hash_func, page_less_func, NULL);
+  printf ("PAGE ADDR AFTER IS %p ################\n", t->spt);
+  hash_init (t->spt, page_hash_func, page_less_func, NULL);
   printf ("MAD THE FKIN HASHTABLE\n");
 }
 
@@ -56,7 +58,7 @@ create_file_page(struct file *file, int32_t ofs, uint8_t *upage, uint32_t read_b
     sup_pt_entry->read_bytes  = read_bytes;
     sup_pt_entry->zero_bytes  = zero_bytes;
     sup_pt_entry->writable    = writable;
-    return (hash_insert(&thread_current()->spt, &sup_pt_entry->elem) == NULL); // NULL means successful entry
+    return (hash_insert(thread_current()->spt, &sup_pt_entry->elem) == NULL); // NULL means successful entry
   }
 }
 
@@ -67,7 +69,7 @@ get_spte (void *upage)
   struct hash_elem *e;
 
   pg.user_addr = upage;
-  e = hash_find (&thread_current()->spt, &pg.elem);
+  e = hash_find (thread_current()->spt, &pg.elem);
   return e != NULL ? hash_entry (e, struct page, elem) : NULL;
 }
 
