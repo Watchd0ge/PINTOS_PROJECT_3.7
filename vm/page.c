@@ -36,11 +36,12 @@ page_less_func (const struct hash_elem *h_elem_a, const struct hash_elem *h_elem
 void
 sup_page_table_init (struct thread *t, void *upage) {
   printf ("THREAD ID IS %d ###########\n", t->tid);
+  printf ("USER ADDR BEFORE IS %p ################\n", upage);
   printf ("PAGE ADDR BEFORE IS %p ################\n", t->spt);
-  // t->spt = malloc (sizeof (struct hash));
   struct frame *fs = allocate_frame (upage);
   t->spt = (struct hash *) fs->phys_addr;
   install_page (upage, fs->phys_addr, true);
+  printf ("USER ADDR BEFORE IS %p ################\n", upage);
   printf ("PAGE ADDR AFTER IS %p ################\n", t->spt);
   hash_init (t->spt, page_hash_func, page_less_func, NULL);
   printf ("MAD THE FKIN HASHTABLE\n");
