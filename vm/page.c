@@ -61,8 +61,8 @@ get_spte (void *upage)
   struct hash_elem *e;
 
   pg.user_addr = upage;
-  e = hash_find (&thread_current()->spt, &pg.hash_elem);
-  return e != NULL ? hash_entry (e, struct page, hash_elem) : NULL;
+  e = hash_find (&thread_current()->spt, &pg.elem);
+  return e != NULL ? hash_entry (e, struct page, elem) : NULL;
 }
 
 void
