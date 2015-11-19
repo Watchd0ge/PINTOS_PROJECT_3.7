@@ -36,6 +36,7 @@ void
 sup_page_table_init (struct thread *t) {
   t->spt = malloc (sizeof (struct hash));
   hash_init (t->spt, page_hash_func, page_less_func, NULL);
+  printf ("MAD THE FKIN HASHTABLE\n");
 }
 
 bool
