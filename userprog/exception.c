@@ -160,13 +160,13 @@ page_fault (struct intr_frame *f)
     write ? "writing" : "reading",
     user ? "user" : "kernel");
 
-  printf ("PHYSICAL ADDR IS SUPPOSED TO BE AT %p ###############\n",pagedir_get_page (thread_current()->pagedir, fault_addr));
+  printf ("IN EXCEPTION PHYSICAL ADDR IS SUPPOSED TO BE AT %p ###############\n",pagedir_get_page (thread_current()->pagedir, fault_addr));
 
   struct page *spte = get_spte(fault_addr);
   if (spte) { load_file(spte); }
   else
     {
-      printf ("Page fault at %p: %s error %s page in %s context.\n",
+      printf ("FUCK ME Page fault at %p: %s error %s page in %s context.\n",
 	      fault_addr,
 	      not_present ? "not present" : "rights violation",
 	      write ? "writing" : "reading",
