@@ -157,6 +157,15 @@ page_fault (struct intr_frame *f)
 
   struct page *spte = get_spte(fault_addr);
   if (spte) { load_file(spte); }
+  else
+    {
+      printf ("Page fault at %p: %s error %s page in %s context.\n",
+	      fault_addr,
+	      not_present ? "not present" : "rights violation",
+	      write ? "writing" : "reading",
+	      user ? "user" : "kernel");
+      kill (f);
+    }
 
   // struct page *pg = get_spte (fault_addr);
   // struct frame *fs = allocate_frame (fault_addr, thread_current()->tid);
