@@ -108,7 +108,7 @@ bool load_file (struct page *spte)
       deallocate_frame(fs->phys_addr);
       return false;
     }
-
+  map_page_to_frame (spte, fs);
   return true;
 }
 
