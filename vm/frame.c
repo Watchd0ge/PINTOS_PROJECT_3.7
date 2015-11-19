@@ -13,7 +13,7 @@
 #include <stdio.h>
 #define NO_OWNER -1
 
-struct frame * find_in_frame_list (void *upage);
+struct frame * pull_from_frame_list (void *upage);
 
 /* Frame Table */
 struct list frame_list;
@@ -46,7 +46,7 @@ allocate_frame (void *upage) {
       return fs;
     } else {
       free (fs);
-      return find_in_frame_list (upage);
+      return pull_from_frame_list (upage);
     }
   } else {
     return NULL;
@@ -54,10 +54,10 @@ allocate_frame (void *upage) {
 }
 
 struct frame *
-find_in_frame_list (void *upage) {
+pull_from_frame_list (void *upage) {
   struct list_elem * next  = list_begin (&frame_list);
   struct frame *fs = NULL;
-  while (next != list_tail(&frame_list)) {
+  while (next != list_tail(&frame_list) || upage == fs->user_addr) {
     fs = list_entry (next, struct frame, elem);
     if (fs->user_addr == NULL) {
       list_remove (next);
@@ -69,7 +69,6 @@ find_in_frame_list (void *upage) {
 
   /* Allocate the available frame */
   if (next == list_tail(&frame_list)) {
-    // TODO: EVICTION
     PANIC ("THERE ARE NO FREE PAGES IN THE FRAME TABLE\n");
   } else {
     list_push_back (&frame_list, &fs->elem);
