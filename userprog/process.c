@@ -47,11 +47,11 @@ process_execute (const char *file_name)
     return TID_ERROR;
   strlcpy (fn_copy, file_name, PGSIZE);
 
-  sup_page_table_init(thread_current());
 
   /* Create a new thread to execute FILE_NAME. */
   //tid = thread_create (file_name, PRI_DEFAULT, start_process, fn_copy);
   tid = thread_create (file_name, PRI_DEFAULT, start_process, fn_copy);
+  sup_page_table_init(thread_current());
   child_t = find_child (tid, thread_current());
   sema_down (&child_t->wait_start_process);
   if (child_t->success_to_load)

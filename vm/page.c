@@ -87,7 +87,6 @@ map_page_to_frame (struct page *pg, struct frame *fs)
 
 bool load_file (struct page *spte)
 {
-  // uint8_t *frame = frame_alloc(flags, spte);
   struct frame * fs = allocate_frame(spte->user_addr);
   if (!fs)
     {
