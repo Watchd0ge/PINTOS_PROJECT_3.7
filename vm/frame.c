@@ -46,7 +46,7 @@ allocate_frame (void *upage) {
       return fs;
     } else {
       free (fs);
-      return find_in_frame_list (upage, tid);
+      return find_in_frame_list (upage);
     }
   } else {
     return NULL;
@@ -54,7 +54,7 @@ allocate_frame (void *upage) {
 }
 
 struct frame *
-find_in_frame_list (void *upage, tid_t tid) {
+find_in_frame_list (void *upage) {
   struct list_elem * next  = list_begin (&frame_list);
   struct frame *fs = NULL;
   while (next != list_tail(&frame_list)) {
@@ -88,7 +88,6 @@ deallocate_frame (void *kpage) {
   while (next != NULL) {
     fs = list_entry (next, struct frame, elem);
     if (fs->phys_addr == kpage) {
-      fs->owner = NO_OWNER;
       fs->user_addr = NULL;
       return;
     } else {
