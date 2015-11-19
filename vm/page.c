@@ -72,7 +72,7 @@ map_page_to_frame (struct page *pg, struct frame *fs)
 {
   /* ADD THE UPAGE TO THE FRAME */
   fs->user_addr = pg->user_addr;
-  fs->owner = thread_current ()->tid;
+  // fs->owner = thread_current ()->tid;
 
   /* UPDATE THE PAGE ENTRY TO REFLECT MAPPING TO A FRAME */
   pg->loc = FRAME;

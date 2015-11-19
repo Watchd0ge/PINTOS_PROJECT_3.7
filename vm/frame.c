@@ -42,13 +42,16 @@ allocate_frame (void *upage, void *tid) {
     fs->phys_addr = palloc_get_page (PAL_USER | PAL_ZERO);
     if (fs->phys_addr != NULL) {
       fs->user_addr = upage;
-      fs->owner = tid;
+      fs->ownder = NO_OWNER;
+      // fs->owner = tid;
       store_frame (fs);
       return fs;
     } else {
       free (fs);
       return find_in_frame_list (upage, tid);
     }
+  } else {
+    return NULL;
   }
 }
 
@@ -73,7 +76,7 @@ find_in_frame_list (void *upage, tid_t tid) {
   } else {
     list_push_back (&frame_list, &fs->elem);
     fs->user_addr = upage;
-    fs->owner = tid;
+    // fs->owner = tid;
     return fs;
   }
 }
