@@ -153,14 +153,15 @@ page_fault (struct intr_frame *f)
   user = (f->error_code & PF_U) != 0;
 
   struct page *spte = get_spte(fault_addr);
-  if (spte) { load_file(spte); }
-  else
-    {
-      printf ("FUCK ME Page fault at %p: %s error %s page in %s context.\n",
-	      fault_addr,
-	      not_present ? "not present" : "rights violation",
-	      write ? "writing" : "reading",
-	      user ? "user" : "kernel");
-      kill (f);
-    }
+  load_file (spte);
+  // if (spte) { load_file(spte); }
+  // else
+  //   {
+  //     printf ("FUCK ME Page fault at %p: %s error %s page in %s context.\n",
+	//       fault_addr,
+	//       not_present ? "not present" : "rights violation",
+	//       write ? "writing" : "reading",
+	//       user ? "user" : "kernel");
+  //     kill (f);
+  //   }
 }
