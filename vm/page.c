@@ -36,8 +36,10 @@ page_less_func (const struct hash_elem *h_elem_a, const struct hash_elem *h_elem
 void
 sup_page_table_init (struct thread *t) {
   t->spt = malloc (sizeof (struct hash));
-  if (t->spt == NULL){
-    PANIC ("I THINK I FOUND THE REASON\n");
+  if (t->spt != NULL){
+    printf ("NO WORRIES\n");
+  } else {
+    printf ("WE HAVE WORRIES MATE\n");
   }
   hash_init (t->spt, page_hash_func, page_less_func, NULL);
   printf ("MAD THE FKIN HASHTABLE\n");
