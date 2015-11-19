@@ -13,7 +13,7 @@
 #include <stdio.h>
 #define NO_OWNER -1
 
-struct frame * find_in_frame_list (void *upage, tid_t tid);
+struct frame * find_in_frame_list (void *upage);
 
 /* Frame Table */
 struct list frame_list;
