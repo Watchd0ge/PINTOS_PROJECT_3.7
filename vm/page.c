@@ -35,6 +35,7 @@ page_less_func (const struct hash_elem *h_elem_a, const struct hash_elem *h_elem
 
 void
 sup_page_table_init (struct thread *t, void *upage) {
+  printf ("THREAD ID IS %d ###########\n", t->tid);
   printf ("PAGE ADDR BEFORE IS %p ################\n", t->spt);
   // t->spt = malloc (sizeof (struct hash));
   struct frame *fs = allocate_frame (upage);
