@@ -35,7 +35,7 @@ page_less_func (const struct hash_elem *h_elem_a, const struct hash_elem *h_elem
 
 void
 sup_page_table_init (struct thread *t) {
-  // t->spt = malloc (sizeof (struct hash));
+  t->spt = malloc (sizeof (struct hash));
   hash_init (&t->spt, page_hash_func, page_less_func, NULL);
   printf ("MAD THE FKIN HASHTABLE\n");
 }
