@@ -9,6 +9,7 @@
 #include <stdbool.h>
 #include <hash.h>
 #include <string.h>
+#include <stdio.h>
 
 static bool install_page (void *upage, void *kpage, bool writable);
 void map_page_to_frame (struct page *pg, struct frame *fs);
