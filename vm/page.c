@@ -35,16 +35,10 @@ page_less_func (const struct hash_elem *h_elem_a, const struct hash_elem *h_elem
 
 void
 sup_page_table_init (struct thread *t, void *upage) {
-  printf ("THREAD ID IS %d ###########\n", t->tid);
-  printf ("USER ADDR BEFORE IS %p ################\n", upage);
-  printf ("PAGE ADDR BEFORE IS %p ################\n", t->spt);
   struct frame *fs = allocate_frame (upage);
   t->spt = (struct hash *) fs->phys_addr;
   install_page (upage, fs->phys_addr, true);
-  printf ("USER ADDR BEFORE IS %p ################\n", upage);
-  printf ("PAGE ADDR AFTER IS %p ################\n", t->spt);
   hash_init (t->spt, page_hash_func, page_less_func, NULL);
-  printf ("MAD THE FKIN HASHTABLE\n");
 }
 
 bool
@@ -128,6 +122,7 @@ install_page (void *upage, void *kpage, bool writable)
 
   /* Verify that there's not already a page at that virtual
      address, then map our page there. */
+  printf ("THERE IS SOMETHING ALREADY HERE : %d\n", pagedir_get_page (t->pagedir, upage) == NULL);
   return (pagedir_get_page (t->pagedir, upage) == NULL
           && pagedir_set_page (t->pagedir, upage, kpage, writable));
 }
