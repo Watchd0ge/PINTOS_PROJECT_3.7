@@ -37,7 +37,7 @@ struct page {
 };
 
 bool create_file_page (struct file *file, int32_t ofs, uint8_t *upage, uint32_t read_bytes, uint32_t zero_bytes, bool writable);
-void sup_page_table_init (struct thread *);
+void sup_page_table_init (struct thread *, void *upage);
 struct page *get_spte (void *upage);
 
 // void map_page_to_frame (struct page *, struct frame *);
