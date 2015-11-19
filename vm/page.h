@@ -23,6 +23,7 @@ struct page {
   enum location loc;
 
   // If in frame
+  struct frame *fs;
   void *phys_addr;
 
   // If in file

@@ -44,8 +44,9 @@ create_file_page(struct file *file, int32_t ofs, uint8_t *upage, uint32_t read_b
   if (sup_pt_entry == NULL) {
     PANIC ("NOT ENOUGH KERNEL MEMORY\n");
   } else {
-    sup_pt_entry->loc         = FILE;
     sup_pt_entry->user_addr   = upage;
+    sup_pt_entry->loc         = FILE;
+    sup_pt_entry->fs          = NULL;
     sup_pt_entry->phys_addr   = NULL;
     sup_pt_entry->file        = file;
     sup_pt_entry->offset      = ofs;
@@ -72,7 +73,6 @@ map_page_to_frame (struct page *pg, struct frame *fs)
 {
   /* ADD THE UPAGE TO THE FRAME */
   fs->user_addr = pg->user_addr;
-  // fs->owner = thread_current ()->tid;
 
   /* UPDATE THE PAGE ENTRY TO REFLECT MAPPING TO A FRAME */
   pg->loc = FRAME;

@@ -475,33 +475,33 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
       size_t page_zero_bytes = PGSIZE - page_read_bytes;
 
       /* Get a page of memory. */
-      // uint8_t *kpage = palloc_get_page (PAL_USER);
-      // fs = allocate_frame (upage, thread_current()->tid);
-      // uint8_t *kpage = fs->phys_addr;
-      // if (kpage == NULL)
-        // return false;
-
-      // if (file_read (file, kpage, page_read_bytes) != (int) page_read_bytes)
-        // {
-          // palloc_free_page (kpage);
-          // deallocate_frame (kpage);
-          // return false;
-        // }
-
-      if (!create_file_page(file, ofs, upage, read_bytes, zero_bytes, writeable)) {
-        // PANIC ("SOMETHING WENT WRONG WITH ADDING TO THE SUP PAGE TABLE\n");
+      uint8_t *kpage = palloc_get_page (PAL_USER);
+      fs = allocate_frame (upage);
+      uint8_t *kpage = fs->phys_addr;
+      if (kpage == NULL)
         return false;
-      }
 
-      // memset (kpage + page_read_bytes, 0, page_zero_bytes);
+      if (file_read (file, kpage, page_read_bytes) != (int) page_read_bytes)
+        {
+          palloc_free_page (kpage);
+          deallocate_frame (kpage);
+          return false;
+        }
+
+      // if (!create_file_page(file, ofs, upage, read_bytes, zero_bytes, writeable)) {
+      //   // PANIC ("SOMETHING WENT WRONG WITH ADDING TO THE SUP PAGE TABLE\n");
+      //   return false;
+      // }
+
+      memset (kpage + page_read_bytes, 0, page_zero_bytes);
 
       /* Add the page to the process's address space. */
-      // if (!install_page (upage, kpage, writable))
-      //   {
-      //     deallocate_frame (kpage);
-      //     // palloc_free_page (kpage);
-      //     return false;
-      //   }
+      if (!install_page (upage, kpage, writable))
+        {
+          deallocate_frame (kpage);
+          // palloc_free_page (kpage);
+          return false;
+        }
 
       /* Advance. */
       read_bytes -= page_read_bytes;
@@ -522,7 +522,7 @@ setup_stack (void **esp)
   bool success = false;
   struct frame *fs = NULL;
 
-  fs = allocate_frame (upage, thread_current ()->tid);
+  fs = allocate_frame (upage);
   kpage = fs->phys_addr;
   // kpage = palloc_get_page (PAL_USER | PAL_ZERO | PAL_ASSERT);
   if (kpage != NULL)

@@ -36,14 +36,12 @@ store_frame (struct frame *f) {
 }
 
 struct frame *
-allocate_frame (void *upage, void *tid) {
+allocate_frame (void *upage) {
   struct frame *fs = malloc (sizeof (struct frame));
   if (fs != NULL) {
     fs->phys_addr = palloc_get_page (PAL_USER | PAL_ZERO);
     if (fs->phys_addr != NULL) {
       fs->user_addr = upage;
-      fs->ownder = NO_OWNER;
-      // fs->owner = tid;
       store_frame (fs);
       return fs;
     } else {
@@ -61,7 +59,7 @@ find_in_frame_list (void *upage, tid_t tid) {
   struct frame *fs = NULL;
   while (next != list_tail(&frame_list)) {
     fs = list_entry (next, struct frame, elem);
-    if (fs->owner == NO_OWNER && fs->user_addr == NULL) {
+    if (fs->user_addr == NULL) {
       list_remove (next);
       break;
     } else {
@@ -80,33 +78,6 @@ find_in_frame_list (void *upage, tid_t tid) {
     return fs;
   }
 }
-
-// void *
-// allocate_frame (void *upage, tid_t tid) {
-//   struct list_elem * next  = list_begin (&frame_list);
-//   struct frame *fs = NULL;
-//
-//   /* Find an available frame */
-//   while (next != NULL) {
-//     fs = list_entry (next, struct frame, elem);
-//     if (fs->owner == NULL && fs->v_addr == NULL) {
-//       list_remove (next);
-//       break;
-//     } else {
-//       next = list_next (next);
-//     }
-//   }
-//
-//   /* Allocate the available frame */
-//   if (next == NULL) {
-//     PANIC ("THERE ARE NO FREE PAGES IN THE FRAME TABLE\n");
-//   } else {
-//     list_push_back (&frame_list, &fs->elem);
-//     fs->v_addr = upage;
-//     fs->owner = tid;
-//     return fs->phys_addr;
-//   }
-// }
 
 void
 deallocate_frame (void *kpage) {
