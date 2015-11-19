@@ -53,7 +53,7 @@ create_file_page(struct file *file, int32_t ofs, uint8_t *upage, uint32_t read_b
     sup_pt_entry->read_bytes  = read_bytes;
     sup_pt_entry->zero_bytes  = zero_bytes;
     sup_pt_entry->writable    = writable;
-    return (hash_insert(&thread_current()->spt, &sup_pt_entry->elem) == NULL); // NULL means successful entry
+    return (hash_insert(thread_current()->spt, &sup_pt_entry->elem) == NULL); // NULL means successful entry
   }
 }
 
@@ -64,7 +64,7 @@ get_spte (void *upage)
   struct hash_elem *e;
 
   pg.user_addr = upage;
-  e = hash_find (&thread_current()->spt, &pg.elem);
+  e = hash_find (thread_current()->spt, &pg.elem);
   return e != NULL ? hash_entry (e, struct page, elem) : NULL;
 }
 
